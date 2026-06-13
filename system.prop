@@ -1,10 +1,11 @@
 ro.postinstall.fstab.prefix=/system
-# USB MTP
 ro.sys.usb.storage.type=mtp
 Build.BRAND=MTK
 ro.soc.manufacturer=Mediatek
 ro.virtual_ab.userspace.snapshots.enabled=true
 init.userspace_reboot.is_supported=true
+ro.mtk_tee_check_support=1
+ro.vendor.customer_logpath=/data
 ro.hardware=mt6789
 ro.boot.hardware=mt6789
 ro.secure=0
@@ -13,3 +14,4 @@ ro.debuggable=1
 persist.sys.usb.config=mtp,adb
 persist.service.adb.enable=1
 persist.service.debuggable=1
+keymaster_ver=4.1
