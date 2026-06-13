@@ -403,6 +403,6 @@ jobs:
             vendor_dtb.dtb
             vendor_dtbo.img
             vendor_dtb.bin
-            ramdisk_extracted/
+
           if-no-files-found: warn
           retention-days: 30
