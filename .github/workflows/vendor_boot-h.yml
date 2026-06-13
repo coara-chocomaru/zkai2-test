@@ -21,7 +21,7 @@ jobs:
       - name: Install tools
         run: |
           sudo apt-get update -q
-          sudo apt-get install -y -q python3 lz4 xxd file binutils
+          sudo apt-get install -y -q python3 lz4 xxd file binutils device-tree-compiler
 
       - name: Verify magic
         run: |
@@ -250,23 +250,14 @@ jobs:
           MAGIC_FDT  = b"\xd0\x0d\xfe\xed"
           MAGIC_DTBO = b"\xd7\xb7\xab\x1e"
 
-          def install_dtc():
-              r = subprocess.run(["which", "dtc"], capture_output=True)
-              if r.returncode == 0:
-                  return r.stdout.decode().strip()
-              subprocess.run(
-                  ["apt-get", "install", "-y", "device-tree-compiler"],
-                  check=True
-              )
-              r = subprocess.run(["which", "dtc"], capture_output=True)
-              if r.returncode != 0:
-                  raise RuntimeError("dtc not found after install")
-              return r.stdout.decode().strip()
-
-          dtc_bin = install_dtc()
+          r = subprocess.run(["which", "dtc"], capture_output=True)
+          dtc_bin = r.stdout.decode().strip() if r.returncode == 0 else None
           print(f"dtc: {dtc_bin}")
 
           def decompile_dtb(dtb_path, dts_path):
+              if not dtc_bin:
+                  print("  dtc not available, skipping decompile")
+                  return
               r = subprocess.run([dtc_bin, "-I", "dtb", "-O", "dts", "-o", dts_path, dtb_path], capture_output=True)
               if r.returncode == 0:
                   with open(dts_path) as f:
