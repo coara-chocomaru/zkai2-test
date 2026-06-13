@@ -1,0 +1,30 @@
+name: Split Large Text File
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL of the large txt file'
+        required: true
+
+jobs:
+  split:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download file
+        run: curl -L -o large.txt "${{ github.event.inputs.url }}"
+
+      - name: Check size and split
+        run: |
+          size=$(stat -c%s large.txt)
+          if [ $size -gt 20971520 ]; then
+            split -b 2M large.txt part_
+          else
+            cp large.txt part_aa
+          fi
+
+      - name: Upload split files
+        uses: actions/upload-artifact@v4
+        with:
+          name: split-parts
+          path: part_*
