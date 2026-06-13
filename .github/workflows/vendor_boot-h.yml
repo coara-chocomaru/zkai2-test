@@ -251,7 +251,6 @@ jobs:
           MAGIC_DTBO = b"\xd7\xb7\xab\x1e"
 
           def decompile_dtb(dtb_path, dts_path):
-              subprocess.run(["apt-get", "install", "-y", "-q", "device-tree-compiler"], capture_output=True)
               r = subprocess.run(["dtc", "-I", "dtb", "-O", "dts", "-o", dts_path, dtb_path], capture_output=True)
               if r.returncode == 0:
                   with open(dts_path) as f:
@@ -260,6 +259,8 @@ jobs:
                   print("".join(lines[:40]))
               else:
                   print(f"  dtc failed: {r.stderr.decode(errors='replace')}")
+
+          subprocess.run(["apt-get", "install", "-y", "-q", "device-tree-compiler"], capture_output=True)
 
           if dtb_data[:4] == MAGIC_FDT:
               print(f"DTB format: FDT at image offset 0x{dtb_offset:08x}")
@@ -271,12 +272,19 @@ jobs:
               print(f"DTB format: DTBO/mkdtimg at image offset 0x{dtb_offset:08x}")
               with open("vendor_dtbo.img", "wb") as f:
                   f.write(dtb_data)
-              dt_entry_count    = struct.unpack_from(">I", dtb_data, 8)[0]
-              dt_entries_offset = struct.unpack_from(">I", dtb_data, 12)[0]
-              dt_entry_size     = struct.unpack_from(">I", dtb_data, 16)[0]
-              dt_table_version  = struct.unpack_from(">I", dtb_data, 4)[0]
-              print(f"  dt_table_version: {dt_table_version}")
-              print(f"  dt_entry_count:   {dt_entry_count}")
+              total_size        = struct.unpack_from(">I", dtb_data, 4)[0]
+              header_size_dt    = struct.unpack_from(">I", dtb_data, 8)[0]
+              dt_entry_size     = struct.unpack_from(">I", dtb_data, 12)[0]
+              dt_entry_count    = struct.unpack_from(">I", dtb_data, 16)[0]
+              dt_entries_offset = struct.unpack_from(">I", dtb_data, 20)[0]
+              dt_page_size      = struct.unpack_from(">I", dtb_data, 24)[0]
+              dt_version        = struct.unpack_from(">I", dtb_data, 28)[0]
+              print(f"  total_size:        {total_size}")
+              print(f"  header_size:       {header_size_dt}")
+              print(f"  dt_entry_size:     {dt_entry_size}")
+              print(f"  dt_entry_count:    {dt_entry_count}")
+              print(f"  dt_entries_offset: 0x{dt_entries_offset:08x}")
+              print(f"  dt_version:        {dt_version}")
               os.makedirs("vendor_dtbs", exist_ok=True)
               for i in range(dt_entry_count):
                   eoff            = dt_entries_offset + i * dt_entry_size
