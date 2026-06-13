@@ -68,8 +68,10 @@ BOARD_RAMDISK_USE_LZ4 := true
 
 
 # SAR
-BOARD_ROOT_EXTRA_FOLDERS := data_mirror debug_ramdisk linkerconfig odm_dlkm oem postinstall second_stage_resources vendor_dlkm
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
 BOARD_SUPPRESS_SECURE_ERASE := true
+
+
 
 # AVB
 BOARD_AVB_ENABLE := true
