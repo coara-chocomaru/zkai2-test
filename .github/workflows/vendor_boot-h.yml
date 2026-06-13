@@ -387,6 +387,11 @@ jobs:
       - name: Show full parsed JSON
         run: cat header_parsed.json
 
+      - name: Fix permissions before upload
+        run: |
+          chmod -R 755 ramdisk_extracted/ 2>/dev/null || true
+          find . -maxdepth 1 -name "*.json" -o -name "*.mk" -o -name "*.dts" -o -name "*.dtb" -o -name "*.img" -o -name "*.bin" | xargs chmod 644 2>/dev/null || true
+
       - name: Upload analysis artifacts
         uses: actions/upload-artifact@v4
         with:
