@@ -250,8 +250,24 @@ jobs:
           MAGIC_FDT  = b"\xd0\x0d\xfe\xed"
           MAGIC_DTBO = b"\xd7\xb7\xab\x1e"
 
+          def install_dtc():
+              r = subprocess.run(["which", "dtc"], capture_output=True)
+              if r.returncode == 0:
+                  return r.stdout.decode().strip()
+              subprocess.run(
+                  ["apt-get", "install", "-y", "device-tree-compiler"],
+                  check=True
+              )
+              r = subprocess.run(["which", "dtc"], capture_output=True)
+              if r.returncode != 0:
+                  raise RuntimeError("dtc not found after install")
+              return r.stdout.decode().strip()
+
+          dtc_bin = install_dtc()
+          print(f"dtc: {dtc_bin}")
+
           def decompile_dtb(dtb_path, dts_path):
-              r = subprocess.run(["dtc", "-I", "dtb", "-O", "dts", "-o", dts_path, dtb_path], capture_output=True)
+              r = subprocess.run([dtc_bin, "-I", "dtb", "-O", "dts", "-o", dts_path, dtb_path], capture_output=True)
               if r.returncode == 0:
                   with open(dts_path) as f:
                       lines = f.readlines()
@@ -259,8 +275,6 @@ jobs:
                   print("".join(lines[:40]))
               else:
                   print(f"  dtc failed: {r.stderr.decode(errors='replace')}")
-
-          subprocess.run(["apt-get", "install", "-y", "-q", "device-tree-compiler"], capture_output=True)
 
           if dtb_data[:4] == MAGIC_FDT:
               print(f"DTB format: FDT at image offset 0x{dtb_offset:08x}")
