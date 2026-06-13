@@ -65,6 +65,8 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_RAMDISK_USE_LZ4 := true
+
+
 # SAR
 BOARD_ROOT_EXTRA_FOLDERS := data_mirror debug_ramdisk linkerconfig odm_dlkm oem postinstall second_stage_resources vendor_dlkm
 BOARD_SUPPRESS_SECURE_ERASE := true
@@ -190,7 +192,7 @@ TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 100
 TW_EXTRA_LANGUAGES := false
 TARGET_USES_MKE2FS := true
-
+TW_DEVICE_VERSION := $(shell date -u +" %F")
 TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
 TW_NO_SCREEN_BLANK := true
 #TW_SCREEN_BLANK_ON_BOOT := true
