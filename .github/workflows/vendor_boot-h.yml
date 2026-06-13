@@ -248,32 +248,51 @@ jobs:
               json.dump(data, f, indent=2)
 
           MAGIC_FDT  = b"\xd0\x0d\xfe\xed"
-          MAGIC_DTBO = b"DTBO"
+          MAGIC_DTBO = b"\xd7\xb7\xab\x1e"
 
-          if dtb_data[:4] == MAGIC_FDT:
-              print(f"DTB format: FDT (flat device tree) at image offset 0x{dtb_offset:08x}")
-              with open("vendor_dtb.dtb", "wb") as f:
-                  f.write(dtb_data)
-              r = subprocess.run(["dtc", "-I", "dtb", "-O", "dts", "-o", "vendor_dtb.dts", "vendor_dtb.dtb"],
-                                  capture_output=True)
+          def decompile_dtb(dtb_path, dts_path):
+              subprocess.run(["apt-get", "install", "-y", "-q", "device-tree-compiler"], capture_output=True)
+              r = subprocess.run(["dtc", "-I", "dtb", "-O", "dts", "-o", dts_path, dtb_path], capture_output=True)
               if r.returncode == 0:
-                  print("DTB decompiled to vendor_dtb.dts")
-                  with open("vendor_dtb.dts") as f:
+                  with open(dts_path) as f:
                       lines = f.readlines()
-                  print(f"DTS lines: {len(lines)}")
-                  print("First 40 lines:")
+                  print(f"  decompiled: {dts_path} ({len(lines)} lines)")
                   print("".join(lines[:40]))
               else:
-                  r2 = subprocess.run(["apt-get", "install", "-y", "-q", "device-tree-compiler"],
-                                      capture_output=True)
-                  r = subprocess.run(["dtc", "-I", "dtb", "-O", "dts", "-o", "vendor_dtb.dts", "vendor_dtb.dtb"],
-                                      capture_output=True)
-                  if r.returncode == 0:
-                      print("DTB decompiled to vendor_dtb.dts")
+                  print(f"  dtc failed: {r.stderr.decode(errors='replace')}")
+
+          if dtb_data[:4] == MAGIC_FDT:
+              print(f"DTB format: FDT at image offset 0x{dtb_offset:08x}")
+              with open("vendor_dtb.dtb", "wb") as f:
+                  f.write(dtb_data)
+              decompile_dtb("vendor_dtb.dtb", "vendor_dtb.dts")
+
           elif dtb_data[:4] == MAGIC_DTBO:
-              print(f"DTB format: DTBO/MKDTIMG at image offset 0x{dtb_offset:08x}")
+              print(f"DTB format: DTBO/mkdtimg at image offset 0x{dtb_offset:08x}")
               with open("vendor_dtbo.img", "wb") as f:
                   f.write(dtb_data)
+              dt_entry_count    = struct.unpack_from(">I", dtb_data, 8)[0]
+              dt_entries_offset = struct.unpack_from(">I", dtb_data, 12)[0]
+              dt_entry_size     = struct.unpack_from(">I", dtb_data, 16)[0]
+              dt_table_version  = struct.unpack_from(">I", dtb_data, 4)[0]
+              print(f"  dt_table_version: {dt_table_version}")
+              print(f"  dt_entry_count:   {dt_entry_count}")
+              os.makedirs("vendor_dtbs", exist_ok=True)
+              for i in range(dt_entry_count):
+                  eoff            = dt_entries_offset + i * dt_entry_size
+                  entry_dt_size   = struct.unpack_from(">I", dtb_data, eoff)[0]
+                  entry_dt_offset = struct.unpack_from(">I", dtb_data, eoff + 4)[0]
+                  entry_id        = struct.unpack_from(">I", dtb_data, eoff + 8)[0]
+                  entry_rev       = struct.unpack_from(">I", dtb_data, eoff + 12)[0]
+                  entry_custom0   = struct.unpack_from(">I", dtb_data, eoff + 16)[0]
+                  print(f"  entry[{i}]: offset=0x{entry_dt_offset:08x} size={entry_dt_size} id=0x{entry_id:08x} rev=0x{entry_rev:08x} custom0=0x{entry_custom0:08x}")
+                  sub_dtb  = dtb_data[entry_dt_offset: entry_dt_offset + entry_dt_size]
+                  dtb_path = f"vendor_dtbs/dtb_{i:02d}.dtb"
+                  dts_path = f"vendor_dtbs/dtb_{i:02d}.dts"
+                  with open(dtb_path, "wb") as f:
+                      f.write(sub_dtb)
+                  decompile_dtb(dtb_path, dts_path)
+
           else:
               print(f"DTB first bytes: {dtb_data[:8].hex()} (unknown format)")
               with open("vendor_dtb.bin", "wb") as f:
@@ -403,6 +422,7 @@ jobs:
             vendor_dtb.dtb
             vendor_dtbo.img
             vendor_dtb.bin
+            vendor_dtbs/
 
           if-no-files-found: warn
           retention-days: 30
