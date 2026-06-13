@@ -15,7 +15,7 @@ $(call inherit-product, device/gsl/ztab020/device.mk)
 PRODUCT_DEVICE := ztab020
 PRODUCT_NAME := twrp_ztab020
 PRODUCT_BRAND := ZMOOTH
-PRODUCT_MODEL := ztab020
+PRODUCT_MODEL := ZTAB020
 PRODUCT_MANUFACTURER := GSL
 
 PRODUCT_GMS_CLIENTID_BASE := android-gsl
