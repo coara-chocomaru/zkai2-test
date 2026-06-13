@@ -1,0 +1,403 @@
+name: Analyze vendor_boot.img
+
+on:
+  workflow_dispatch:
+    inputs:
+      vendor_boot_url:
+        description: "URL to vendor_boot.img"
+        required: true
+        type: string
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download vendor_boot.img
+        run: |
+          curl -L -o vendor_boot.img "${{ github.event.inputs.vendor_boot_url }}"
+          ls -lh vendor_boot.img
+
+      - name: Install tools
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q python3 lz4 xxd file binutils
+
+      - name: Verify magic
+        run: |
+          MAGIC=$(xxd -l 8 vendor_boot.img | head -1)
+          echo "Magic bytes: $MAGIC"
+          file vendor_boot.img
+
+      - name: Parse vendor_boot header (Python)
+        run: |
+          python3 << 'EOF'
+          import struct
+          import sys
+          import json
+          import os
+
+          with open("vendor_boot.img", "rb") as f:
+              raw = f.read(4096)
+
+          magic = raw[0:8]
+          if magic != b"VNDRBOOT":
+              print(f"ERROR: Invalid magic: {magic}", file=sys.stderr)
+              sys.exit(1)
+
+          header_version = struct.unpack_from("<I", raw, 8)[0]
+          page_size       = struct.unpack_from("<I", raw, 12)[0]
+          kernel_addr     = struct.unpack_from("<I", raw, 16)[0]
+          ramdisk_addr    = struct.unpack_from("<I", raw, 20)[0]
+          vendor_ramdisk_size = struct.unpack_from("<I", raw, 24)[0]
+          cmdline         = raw[28:28+2048].rstrip(b"\x00").decode("ascii", errors="replace")
+          tags_addr       = struct.unpack_from("<I", raw, 2076)[0]
+          name            = raw[2080:2080+16].rstrip(b"\x00").decode("ascii", errors="replace")
+          header_size     = struct.unpack_from("<I", raw, 2096)[0]
+          dtb_size        = struct.unpack_from("<I", raw, 2100)[0]
+          dtb_addr        = struct.unpack_from("<Q", raw, 2104)[0]
+
+          kernel_base   = kernel_addr - 0x00008000
+          kernel_offset = 0x00008000
+
+          result = {
+              "header_version":       header_version,
+              "BOARD_PAGE_SIZE":      page_size,
+              "BOARD_KERNEL_BASE":    f"0x{kernel_base:08x}",
+              "BOARD_KERNEL_OFFSET":  f"0x{kernel_offset:08x}",
+              "kernel_addr_raw":      f"0x{kernel_addr:08x}",
+              "BOARD_RAMDISK_OFFSET": f"0x{ramdisk_addr:08x}",
+              "BOARD_TAGS_OFFSET":    f"0x{tags_addr:08x}",
+              "BOARD_DTB_OFFSET":     f"0x{dtb_addr:016x}",
+              "BOARD_HEADER_SIZE":    header_size,
+              "BOARD_DTB_SIZE":       dtb_size,
+              "vendor_ramdisk_size":  vendor_ramdisk_size,
+              "BOARD_VENDOR_CMDLINE": cmdline,
+              "board_name":           name,
+          }
+
+          with open("header_parsed.json", "w") as out:
+              json.dump(result, out, indent=2)
+
+          print("=== Parsed vendor_boot header ===")
+          for k, v in result.items():
+              print(f"  {k}: {v}")
+          EOF
+
+      - name: Detect compression format
+        run: |
+          python3 << 'EOF'
+          import struct
+          import json
+
+          with open("vendor_boot.img", "rb") as f:
+              raw = f.read()
+
+          with open("header_parsed.json") as f:
+              hdr = json.load(f)
+
+          page_size    = hdr["BOARD_PAGE_SIZE"]
+          header_size  = hdr["BOARD_HEADER_SIZE"]
+          ramdisk_size = hdr["vendor_ramdisk_size"]
+
+          pages_for_header = (header_size + page_size - 1) // page_size
+          ramdisk_offset   = pages_for_header * page_size
+
+          ramdisk_data = raw[ramdisk_offset: ramdisk_offset + min(ramdisk_size, 16)]
+
+          SIGNATURES = {
+              b"\x1f\x8b":         "gzip",
+              b"\x02\x21\x4c\x18": "lz4_frame",
+              b"\x02\x21\x4c\x19": "lz4_frame",
+              b"\x04\x22\x4d\x18": "lz4_frame",
+              b"\x04\x22\x4d\x19": "lz4_frame",
+              b"\xfd7zXZ\x00":     "xz",
+              b"BZh":              "bzip2",
+              b"\x89LZO":         "lzo",
+              b"\x28\xb5\x2f\xfd": "zstd",
+          }
+
+          detected = "unknown"
+          for sig, name in SIGNATURES.items():
+              if ramdisk_data[:len(sig)] == sig:
+                  detected = name
+                  break
+
+          # lz4 legacy
+          if detected == "unknown" and ramdisk_data[:4] == b"\x02\x21\x4c\x18"[0:1] + b"\x00\x00\x00":
+              detected = "lz4_legacy"
+          if detected == "unknown":
+              hex_sig = ramdisk_data[:8].hex()
+              if hex_sig.startswith("0221"):
+                  detected = "lz4_legacy"
+
+          print(f"ramdisk offset in image: 0x{ramdisk_offset:08x}")
+          print(f"ramdisk first bytes: {ramdisk_data[:8].hex()}")
+          print(f"compression detected: {detected}")
+
+          with open("header_parsed.json") as f:
+              data = json.load(f)
+          data["ramdisk_offset_in_image"] = f"0x{ramdisk_offset:08x}"
+          data["ramdisk_compression"]     = detected
+          with open("header_parsed.json", "w") as f:
+              json.dump(data, f, indent=2)
+          EOF
+
+      - name: Extract and inspect ramdisk
+        run: |
+          python3 << 'EOF'
+          import struct, json, subprocess, os, sys
+
+          with open("vendor_boot.img", "rb") as f:
+              raw = f.read()
+
+          with open("header_parsed.json") as f:
+              hdr = json.load(f)
+
+          page_size    = hdr["BOARD_PAGE_SIZE"]
+          header_size  = hdr["BOARD_HEADER_SIZE"]
+          ramdisk_size = hdr["vendor_ramdisk_size"]
+          compression  = hdr["ramdisk_compression"]
+
+          pages_for_header = (header_size + page_size - 1) // page_size
+          ramdisk_offset   = pages_for_header * page_size
+
+          ramdisk_data = raw[ramdisk_offset: ramdisk_offset + ramdisk_size]
+
+          ext_map = {
+              "gzip":       ".gz",
+              "lz4_frame":  ".lz4",
+              "lz4_legacy": ".lz4",
+              "xz":         ".xz",
+              "bzip2":      ".bz2",
+              "zstd":       ".zst",
+              "unknown":    ".bin",
+          }
+          ext = ext_map.get(compression, ".bin")
+          ramdisk_file = f"vendor_ramdisk{ext}"
+
+          with open(ramdisk_file, "wb") as f:
+              f.write(ramdisk_data)
+
+          print(f"Saved ramdisk: {ramdisk_file} ({len(ramdisk_data)} bytes)")
+
+          os.makedirs("ramdisk_extracted", exist_ok=True)
+
+          if compression in ("lz4_frame", "lz4_legacy"):
+              r = subprocess.run(
+                  ["lz4", "-d", "-f", ramdisk_file, "vendor_ramdisk.cpio"],
+                  capture_output=True
+              )
+              if r.returncode != 0:
+                  print("lz4 frame failed, trying legacy...")
+                  r = subprocess.run(
+                      ["lz4", "-d", "-f", "--legacy", ramdisk_file, "vendor_ramdisk.cpio"],
+                      capture_output=True
+                  )
+              cpio_file = "vendor_ramdisk.cpio"
+          elif compression == "gzip":
+              subprocess.run(["gunzip", "-f", "-k", ramdisk_file])
+              cpio_file = ramdisk_file.replace(".gz", "")
+          elif compression == "xz":
+              subprocess.run(["xz", "-d", "-f", "-k", ramdisk_file])
+              cpio_file = ramdisk_file.replace(".xz", "")
+          elif compression == "zstd":
+              subprocess.run(["zstd", "-d", ramdisk_file, "-o", "vendor_ramdisk.cpio"])
+              cpio_file = "vendor_ramdisk.cpio"
+          else:
+              cpio_file = ramdisk_file
+
+          if os.path.exists(cpio_file):
+              r = subprocess.run(
+                  ["cpio", "-idmv", "--no-absolute-filenames"],
+                  stdin=open(cpio_file, "rb"),
+                  cwd="ramdisk_extracted",
+                  capture_output=True
+              )
+              print("Ramdisk contents (top level):")
+              for entry in sorted(os.listdir("ramdisk_extracted")):
+                  print(f"  {entry}")
+          EOF
+
+      - name: Inspect DTB
+        run: |
+          python3 << 'EOF'
+          import struct, json, subprocess, os
+
+          with open("vendor_boot.img", "rb") as f:
+              raw = f.read()
+
+          with open("header_parsed.json") as f:
+              hdr = json.load(f)
+
+          page_size    = hdr["BOARD_PAGE_SIZE"]
+          header_size  = hdr["BOARD_HEADER_SIZE"]
+          ramdisk_size = hdr["vendor_ramdisk_size"]
+          dtb_size     = hdr["BOARD_DTB_SIZE"]
+
+          pages_for_header  = (header_size + page_size - 1) // page_size
+          pages_for_ramdisk = (ramdisk_size + page_size - 1) // page_size
+          dtb_offset        = (pages_for_header + pages_for_ramdisk) * page_size
+
+          dtb_data = raw[dtb_offset: dtb_offset + dtb_size]
+
+          with open("header_parsed.json") as f:
+              data = json.load(f)
+          data["dtb_offset_in_image"] = f"0x{dtb_offset:08x}"
+          with open("header_parsed.json", "w") as f:
+              json.dump(data, f, indent=2)
+
+          MAGIC_FDT  = b"\xd0\x0d\xfe\xed"
+          MAGIC_DTBO = b"DTBO"
+
+          if dtb_data[:4] == MAGIC_FDT:
+              print(f"DTB format: FDT (flat device tree) at image offset 0x{dtb_offset:08x}")
+              with open("vendor_dtb.dtb", "wb") as f:
+                  f.write(dtb_data)
+              r = subprocess.run(["dtc", "-I", "dtb", "-O", "dts", "-o", "vendor_dtb.dts", "vendor_dtb.dtb"],
+                                  capture_output=True)
+              if r.returncode == 0:
+                  print("DTB decompiled to vendor_dtb.dts")
+                  with open("vendor_dtb.dts") as f:
+                      lines = f.readlines()
+                  print(f"DTS lines: {len(lines)}")
+                  print("First 40 lines:")
+                  print("".join(lines[:40]))
+              else:
+                  r2 = subprocess.run(["apt-get", "install", "-y", "-q", "device-tree-compiler"],
+                                      capture_output=True)
+                  r = subprocess.run(["dtc", "-I", "dtb", "-O", "dts", "-o", "vendor_dtb.dts", "vendor_dtb.dtb"],
+                                      capture_output=True)
+                  if r.returncode == 0:
+                      print("DTB decompiled to vendor_dtb.dts")
+          elif dtb_data[:4] == MAGIC_DTBO:
+              print(f"DTB format: DTBO/MKDTIMG at image offset 0x{dtb_offset:08x}")
+              with open("vendor_dtbo.img", "wb") as f:
+                  f.write(dtb_data)
+          else:
+              print(f"DTB first bytes: {dtb_data[:8].hex()} (unknown format)")
+              with open("vendor_dtb.bin", "wb") as f:
+                  f.write(dtb_data)
+          EOF
+
+      - name: Parse vendor_ramdisk_table (v4 specific)
+        run: |
+          python3 << 'EOF'
+          import struct, json, os
+
+          with open("vendor_boot.img", "rb") as f:
+              raw = f.read(4096)
+
+          with open("header_parsed.json") as f:
+              hdr = json.load(f)
+
+          header_version = hdr["header_version"]
+          if header_version < 4:
+              print(f"header_version={header_version}, vendor_ramdisk_table not present")
+              exit(0)
+
+          vrt_size       = struct.unpack_from("<I", raw, 2112)[0]
+          vrt_entry_num  = struct.unpack_from("<I", raw, 2116)[0]
+          vrt_entry_size = struct.unpack_from("<I", raw, 2120)[0]
+          bootconfig_size = struct.unpack_from("<I", raw, 2124)[0]
+
+          print(f"vendor_ramdisk_table_size:       {vrt_size}")
+          print(f"vendor_ramdisk_table_entry_num:  {vrt_entry_num}")
+          print(f"vendor_ramdisk_table_entry_size: {vrt_entry_size}")
+          print(f"bootconfig_size:                 {bootconfig_size}")
+
+          with open("vendor_boot.img", "rb") as f:
+              raw_full = f.read()
+
+          page_size   = hdr["BOARD_PAGE_SIZE"]
+          header_size = hdr["BOARD_HEADER_SIZE"]
+          ramdisk_size = hdr["vendor_ramdisk_size"]
+          dtb_size    = hdr["BOARD_DTB_SIZE"]
+
+          pages_for_header  = (header_size + page_size - 1) // page_size
+          pages_for_ramdisk = (ramdisk_size + page_size - 1) // page_size
+          pages_for_dtb     = (dtb_size + page_size - 1) // page_size
+          vrt_offset        = (pages_for_header + pages_for_ramdisk + pages_for_dtb) * page_size
+
+          entries = []
+          for i in range(vrt_entry_num):
+              entry_off = vrt_offset + i * vrt_entry_size
+              entry_raw = raw_full[entry_off: entry_off + vrt_entry_size]
+              ramdisk_data_offset = struct.unpack_from("<I", entry_raw, 0)[0]
+              ramdisk_data_size   = struct.unpack_from("<I", entry_raw, 4)[0]
+              ramdisk_load_addr   = struct.unpack_from("<Q", entry_raw, 8)[0] if vrt_entry_size >= 16 else 0
+              ramdisk_type        = struct.unpack_from("<I", entry_raw, 16)[0] if vrt_entry_size >= 20 else 0
+              ramdisk_name_bytes  = entry_raw[20:20+32] if vrt_entry_size >= 52 else b""
+              ramdisk_name        = ramdisk_name_bytes.rstrip(b"\x00").decode("ascii", errors="replace")
+              board_id            = entry_raw[52:52+32] if vrt_entry_size >= 84 else b""
+
+              RAMDISK_TYPE = {0: "NONE", 1: "PLATFORM", 2: "RECOVERY", 3: "DLKM"}
+              type_str = RAMDISK_TYPE.get(ramdisk_type, f"UNKNOWN({ramdisk_type})")
+
+              entry = {
+                  "index":               i,
+                  "ramdisk_data_offset": f"0x{ramdisk_data_offset:08x}",
+                  "ramdisk_data_size":   ramdisk_data_size,
+                  "ramdisk_load_addr":   f"0x{ramdisk_load_addr:016x}",
+                  "ramdisk_type":        type_str,
+                  "ramdisk_name":        ramdisk_name,
+              }
+              entries.append(entry)
+              print(f"\n  [entry {i}]")
+              for k, v in entry.items():
+                  print(f"    {k}: {v}")
+
+          with open("header_parsed.json") as f:
+              data = json.load(f)
+          data["vendor_ramdisk_table"] = entries
+          data["bootconfig_size"]      = bootconfig_size
+          with open("header_parsed.json", "w") as f:
+              json.dump(data, f, indent=2)
+          EOF
+
+      - name: Generate BoardConfig snippet
+        run: |
+          python3 << 'EOF'
+          import json
+
+          with open("header_parsed.json") as f:
+              hdr = json.load(f)
+
+          lines = [
+              f'BOARD_VENDOR_CMDLINE := {hdr["BOARD_VENDOR_CMDLINE"]}',
+              f'BOARD_KERNEL_BASE := {hdr["BOARD_KERNEL_BASE"]}',
+              f'BOARD_PAGE_SIZE := {hdr["BOARD_PAGE_SIZE"]}',
+              f'BOARD_KERNEL_OFFSET := {hdr["BOARD_KERNEL_OFFSET"]}',
+              f'BOARD_RAMDISK_OFFSET := {hdr["BOARD_RAMDISK_OFFSET"]}',
+              f'BOARD_TAGS_OFFSET := {hdr["BOARD_TAGS_OFFSET"]}',
+              f'BOARD_BOOT_HEADER_VERSION := {hdr["header_version"]}',
+              f'BOARD_HEADER_SIZE := {hdr["BOARD_HEADER_SIZE"]}',
+              f'BOARD_DTB_SIZE := {hdr["BOARD_DTB_SIZE"]}',
+              f'BOARD_DTB_OFFSET := {hdr["BOARD_DTB_OFFSET"]}',
+              f'BOARD_FLASH_BLOCK_SIZE := 262144',
+          ]
+
+          output = "\n".join(lines)
+          print(output)
+
+          with open("BoardConfig_snippet.mk", "w") as f:
+              f.write(output + "\n")
+          EOF
+
+      - name: Show full parsed JSON
+        run: cat header_parsed.json
+
+      - name: Upload analysis artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vendor_boot_analysis
+          path: |
+            header_parsed.json
+            BoardConfig_snippet.mk
+            vendor_dtb.dts
+            vendor_dtb.dtb
+            vendor_dtbo.img
+            vendor_dtb.bin
+            ramdisk_extracted/
+          if-no-files-found: warn
+          retention-days: 30
