@@ -22,7 +22,7 @@ PRODUCT_GMS_CLIENTID_BASE := android-gsl
 
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.build.product=Zkai-study-Tab \
-    ro.product.board=k6789v1_64 \
+    ro.product.board=mgvi_64_armv82 \
     ro.product.device=Zkai-study-Tab \
     persist.sys.usb.config=mtp,adb
 PRODUCT_BUILD_PROP_OVERRIDES += \
