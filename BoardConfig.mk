@@ -105,6 +105,7 @@ TARGET_USERIMAGES_USE_F2FS := true
 
 TARGET_COPY_OUT_PRODUCT := product
 TARGET_COPY_OUT_SYSTEM := system
+TARGET_COPY_OUT_SYSTEM_EXT := /system/system_ext
 TARGET_COPY_OUT_VENDOR := vendor
 
 # Build a separate vendor_dlkm partition
