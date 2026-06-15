@@ -50,7 +50,17 @@ AB_OTA_POSTINSTALL_CONFIG += \
     FILESYSTEM_TYPE_vendor=erofs \
     POSTINSTALL_OPTIONAL_vendor=true
 
+# Boot control HAL - Bootctrl
 PRODUCT_PACKAGES += \
+    android.hardware.boot@1.2-mtkimpl \
+    android.hardware.boot@1.2-mtkimpl.recovery
+
+PRODUCT_PACKAGES_DEBUG += \
+    bootctrl
+
+PRODUCT_PACKAGES += \
+    bootctrl \
+    bootctrl.recovery \
     libmtk_bsg
 
 # Health
