@@ -197,5 +197,4 @@ TW_BACKUP_EXCLUSIONS := /data/fonts/files
 TW_LOAD_VENDOR_BOOT_MODULES := true
 # BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 # TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
-TW_LOAD_VENDOR_DLKM_MODULES := "i2c-hid.ko"
-
+TW_LOAD_VENDOR_DLKM_MODULES := "i2c-hid.ko focaltech_fp.ko wacom_i2c_aes.ko"
