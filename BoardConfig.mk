@@ -187,13 +187,12 @@ TW_NO_SCREEN_BLANK := false
 TW_HAS_MTP := true
 
 TW_INCLUDE_FUSE_EXFAT := true
-# TW_LOAD_VENDOR_DLKM_MODULES := "modules.load"
 TW_EXCLUDE_APEX := true
 TW_EXCLUDE_TWRPAPP := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_BACKUP_EXCLUSIONS := /data/fonts/files
 #vendor_boot
 TW_LOAD_VENDOR_BOOT_MODULES := true
-TW_LOAD_VENDOR_DLKM_MODULES := "i2c_hid.ko hct_devices.ko hct_lt8911_edp_mipi.ko"
+# TW_LOAD_VENDOR_DLKM_MODULES := "i2c_hid.ko hct_devices.ko hct_lt8911_edp_mipi.ko"
 # BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 # TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
