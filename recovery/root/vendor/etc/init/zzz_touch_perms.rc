@@ -1,5 +1,4 @@
 on boot
-    wait_for_file /sys/devices/platform/mtk-tpd2.0/change_rate 2
     chown system system /sys/devices/platform/mtk-tpd2.0/change_rate
     chmod 0664 /sys/devices/platform/mtk-tpd2.0/change_rate
     chown root diag /sys/module/tpd_setting/parameters/tpd_calmat
