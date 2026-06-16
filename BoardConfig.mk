@@ -73,6 +73,7 @@ BOARD_RAMDISK_USE_LZ4 := true
 BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/recovery/root/lib/modules/modules.load.recovery))
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/recovery/root/lib/modules/modules.load))
 TW_LOAD_VENDOR_DLKM_MODULES := "i2c_hid.ko"
+TW_LOAD_VENDOR_MODULES := "i2c_hid.ko hct_lt8911_edp_mipi.ko hct_devices.ko"
 TW_LOAD_VENDOR_BOOT_MODULES := true
 
 # SAR
