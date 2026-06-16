@@ -162,4 +162,18 @@ on post-fs-data
     mkdir /mnt/vendor/persist/t6_twrp
     mkdir /mnt/vendor/protect_f/tee_twrp
     exec u:r:recovery:s0 system -- /vendor/bin/trustkernel.twrp.sh
+    chmod 0777 /sys/devices/platform/11f00000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chown system radio /sys/devices/platform/11f00000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chmod 0777 /sys/devices/platform/11f00000.i2c0/i2c-0/0-0048/misc/glove_en
+    chown system radio /sys/devices/platform/11f00000.i2c0/i2c-0/0-0048/misc/glove_en
+    chmod 0777 /sys/devices/platform/11f00000.i2c0/i2c-0/0-0041/ilitek_glove_mode
+    chown system radio /sys/devices/platform/11f00000.i2c0/i2c-0/0-0041/ilitek_glove_mode
+    chmod 0777 /sys/devices/platform/11007000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chown system radio /sys/devices/platform/11007000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chmod 0777 /sys/devices/platform/soc/11007000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chown system radio /sys/devices/platform/soc/11007000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chmod 0777 /sys/devices/platform/soc/11007000.i2c0/i2c-0/0-0048/himax_glove_mode
+    chown system radio /sys/devices/platform/soc/11007000.i2c0/i2c-0/0-0048/himax_glove_mode
+    chmod 0777 /sys/touchscreen/chsc_glove  
+    chown system radio /sys/touchscreen/chsc_glove
     insmod /vendor_dlkm/lib/modules/i2c-hid.ko
