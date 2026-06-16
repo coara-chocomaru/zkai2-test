@@ -69,6 +69,7 @@ BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/recovery/root/lib/modules/modules.load.recovery))
 BOARD_KERNEL_SEPARATED_DTBO := true
 BOARD_RAMDISK_USE_LZ4 := true
+TW_LOAD_VENDOR_BOOT_MODULES := true
 
 # SAR
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
@@ -191,8 +192,9 @@ TW_EXCLUDE_APEX := true
 TW_EXCLUDE_TWRPAPP := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_BACKUP_EXCLUSIONS := /data/fonts/files
-#vendor_boot
-TW_LOAD_VENDOR_BOOT_MODULES := true
+
+
+
 # TW_LOAD_VENDOR_DLKM_MODULES := "i2c_hid.ko hct_devices.ko hct_lt8911_edp_mipi.ko"
 # BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 # TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
