@@ -8,6 +8,7 @@ ro.mtk_tee_check_support=1
 ro.vendor.customer_logpath=/data
 ro.hardware=mt6789
 ro.boot.hardware=mt6789
+ro.boot.boot_devices=bootdevice,soc/11270000.ufshci,11270000.ufshci
 ro.secure=0
 ro.adb.secure=0
 ro.board.first_api_level=31
