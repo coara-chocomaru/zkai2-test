@@ -1,0 +1,30 @@
+
+    chown system system /sys/devices/platform/mtk-tpd2.0/change_rate
+    chmod 0664 /sys/devices/platform/mtk-tpd2.0/change_rate
+    chown root diag /sys/module/tpd_setting/parameters/tpd_calmat
+    chown root diag /sys/module/tpd_setting/parameters/tpd_em_debounce_time
+    chown root diag /sys/module/tpd_setting/parameters/tpd_mode
+    chown root diag /sys/module/tpd_setting/parameters/tpd_em_debounce_time0
+    chown root diag /sys/module/tpd_setting/parameters/tpd_em_debounce_time1
+    chown root diag /sys/module/tpd_setting/parameters/tpd_em_spl_num
+    chown root diag /sys/module/tpd_setting/parameters/tpd_em_pressure_threshold
+    chown root diag /sys/module/tpd_setting/parameters/tpd_em_auto_time_interval
+    chown root diag /sys/module/tpd_setting/parameters/tpd_em_sample_cnt
+    chown root diag /sys/module/tpd_setting/parameters/tpd_em_asamp
+    chown root diag /sys/module/tpd_debug/parameters/tpd_em_log
+    chown root diag /sys/module/tpd_debug/parameters/tpd_em_log_to_fs
+
+    chmod 0777 /sys/devices/platform/11f00000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chown system radio /sys/devices/platform/11f00000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chmod 0777 /sys/devices/platform/11f00000.i2c0/i2c-0/0-0048/misc/glove_en
+    chown system radio /sys/devices/platform/11f00000.i2c0/i2c-0/0-0048/misc/glove_en
+    chmod 0777 /sys/devices/platform/11f00000.i2c0/i2c-0/0-0041/ilitek_glove_mode
+    chown system radio /sys/devices/platform/11f00000.i2c0/i2c-0/0-0041/ilitek_glove_mode
+    chmod 0777 /sys/devices/platform/11007000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chown system radio /sys/devices/platform/11007000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chmod 0777 /sys/devices/platform/soc/11007000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chown system radio /sys/devices/platform/soc/11007000.i2c0/i2c-0/0-0038/fts_glove_mode
+    chmod 0777 /sys/devices/platform/soc/11007000.i2c0/i2c-0/0-0048/himax_glove_mode
+    chown system radio /sys/devices/platform/soc/11007000.i2c0/i2c-0/0-0048/himax_glove_mode
+    chmod 0777 /sys/touchscreen/chsc_glove  
+    chown system radio /sys/touchscreen/chsc_glove
