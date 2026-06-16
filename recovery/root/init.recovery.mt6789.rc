@@ -129,14 +129,13 @@ on property:crypto.ready=0
     stop keymaster_attestation-1-1
 
 on post-fs-data
-    chmod 0666 /dev/pmem_multimedia
     mkdir /data/vendor_de 0770 system system
     mkdir /data/vendor_de/0 0770 system system
     mkdir /data/vendor/hardware 0771 root root
 
     start health-hal-2-1
     setprop sys.usb.config adb
-    
+
  on boot
     mkdir /mnt/vendor/persist
     mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
