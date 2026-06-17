@@ -3,6 +3,12 @@
 /metadata           ext4      /dev/block/by-name/metadata      flags=display="metadata";backup=1
 /data               f2fs      /dev/block/by-name/userdata      flags=fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized,keydirectory=/metadata/vold/metadata_encryption,fsverity
 
+/system             ext4      /dev/block/mapper/system         flags=backup=1;wipe=1;slotselect;logical;display="System"
+/vendor             ext4      /dev/block/mapper/vendor         flags=backup=1;wipe=1;slotselect;logical;display="Vendor"
+/product            ext4      /dev/block/mapper/product        flags=backup=1;wipe=1;slotselect;logical;display="Product"
+/vendor_dlkm        ext4      /dev/block/mapper/vendor_dlkm    flags=backup=1;wipe=1;slotselect;logical;display="Vendor DLKM"
+/odm_dlkm           ext4      /dev/block/mapper/odm_dlkm       flags=backup=1;wipe=1;slotselect;logical;display="ODM DLKM"
+
 # Boot
 /boot               emmc      /dev/block/by-name/boot                  flags=display="boot";slotselect;backup=1;flashimg=1
 /vendor_boot        emmc      /dev/block/by-name/vendor_boot           flags=display="vendor_boot";slotselect;backup=1;flashimg=1
@@ -51,8 +57,6 @@
 /spmfw              emmc      /dev/block/by-name/spmfw                     flags=display="spmfw"
 /pi_img             emmc      /dev/block/by-name/pi_img                    flags=display="pi_img"
 
-
 # External-Devices (SDCARD | OTG)
 /external_sd    auto     /dev/block/mmcblk0p1  /dev/block/mmcblk0     flags=display="Micro_SDcard";storage;wipeingui;removable;fsflags="utf8"
 /usbotg         auto     /dev/block/sdd1       /dev/block/sdd         flags=display="Usb_Otg";storage;wipeingui;removable;fsflags="utf8"
-
