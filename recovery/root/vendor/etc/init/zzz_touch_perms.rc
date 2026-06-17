@@ -1,3 +1,9 @@
+on init
+    insmod /vendor_dlkm/lib/modules/i2c_hid.ko
+    insmod /lib/modules/mtk_disp_notify.ko
+    insmod /lib/modules/hct_lt8911_edp_mipi.ko
+    insmod /lib/modules/hct_devices.ko
+
 on boot
     chown system system /sys/devices/platform/mtk-tpd2.0/change_rate
     chmod 0664 /sys/devices/platform/mtk-tpd2.0/change_rate
