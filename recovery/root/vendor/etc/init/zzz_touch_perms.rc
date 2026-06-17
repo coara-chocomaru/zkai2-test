@@ -1,2 +1,2 @@
 on late-fs
-    insmod /lib/modules/i2c_hid.ko
+    insmod /lib/modules/i2c-hid.ko
