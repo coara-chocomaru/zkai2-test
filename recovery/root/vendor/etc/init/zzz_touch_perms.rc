@@ -1,4 +1,4 @@
-on init
+on late-fs
     insmod /vendor_dlkm/lib/modules/i2c_hid.ko
     insmod /lib/modules/mtk_disp_notify.ko
     insmod /lib/modules/hct_lt8911_edp_mipi.ko
