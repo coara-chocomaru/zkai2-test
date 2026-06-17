@@ -146,3 +146,5 @@ on post-fs-data
     mkdir /mnt/vendor/persist/t6_twrp
     mkdir /mnt/vendor/protect_f/tee_twrp
     exec u:r:recovery:s0 system -- /vendor/bin/trustkernel.twrp.sh
+
+import /vendor/etc/init/zzz_touch_perms.rc
