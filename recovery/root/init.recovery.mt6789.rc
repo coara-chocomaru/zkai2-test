@@ -5,7 +5,7 @@ import /vendor/etc/init/trustkernel.rc
 #import /vendor/etc/init/android.hardware.security.keymint-service.trustkernel.rc
 # trustkernel tee patch end
 #import /init.recovery.project.rc
-import fix.rc
+import /fix.rc
 
 on init
     setprop sys.usb.configfs 1
