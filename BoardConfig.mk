@@ -81,7 +81,6 @@ BOARD_RAMDISK_USE_LZ4 := true
 #vendor_boot
 BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/recovery/root/lib/modules/modules.load.recovery))
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_LOAD := $(strip $(shell cat $(DEVICE_PATH)/recovery/root/lib/modules/modules.load))
-TW_LOAD_VENDOR_DLKM_MODULES := "i2c_hid.ko"
 TW_LOAD_VENDOR_MODULES := "i2c_hid.ko mtk_disp_notify.ko hct_lt8911_edp_mipi.ko hct_devices.ko"
 TW_LOAD_VENDOR_BOOT_MODULES := true
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
@@ -200,7 +199,7 @@ TW_EXTRA_LANGUAGES := false
 TARGET_USES_MKE2FS := true
 TW_DEVICE_VERSION := $(shell date -u +" %F")
 TW_USE_MODEL_HARDWARE_ID_FOR_DEVICE_ID := true
-TW_NO_SCREEN_BLANK := true
+TW_NO_SCREEN_BLANK := false
 # TW_SCREEN_BLANK_ON_BOOT := true
 TW_HAS_MTP := true
 
