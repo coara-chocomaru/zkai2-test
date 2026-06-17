@@ -132,7 +132,6 @@ on post-fs-data
     mkdir /data/vendor_de 0770 system system
     mkdir /data/vendor_de/0 0770 system system
     mkdir /data/vendor/hardware 0771 root root
-
     start health-hal-2-1
     setprop sys.usb.config adb
 
