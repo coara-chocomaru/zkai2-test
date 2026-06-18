@@ -58,7 +58,6 @@ mtk-cmdq-drv-ext.ko
 cmdq-platform-mt6789.ko
 cmdq_helper_inf.ko
 mtk-mml.ko
-i2c-hid.ko
 mtk_panel_ext.ko
 hct_lt8911_edp_mipi.ko
 hct_devices.ko
