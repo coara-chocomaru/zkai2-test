@@ -19,6 +19,8 @@
 
 # Firmware partitions
 /para               emmc      /dev/block/by-name/para                      flags=display="para"
+/protect_f          ext4      /dev/block/by-name/protect1                  flags=display="protect_f"
+/protect_s          ext4      /dev/block/by-name/protect2                  flags=display="protect_s"
 /nvdata             ext4      /dev/block/by-name/nvdata                    flags=display="NvData"
 /nvcfg              ext4      /dev/block/by-name/nvcfg                     flags=display="NvCfg"
 /boot_para          emmc      /dev/block/by-name/boot_para                 flags=display="boot_para"
@@ -48,6 +50,7 @@
 /md3img             emmc      /dev/block/by-name/md3img                    flags=display="md3img"
 /spmfw              emmc      /dev/block/by-name/spmfw                     flags=display="spmfw"
 /pi_img             emmc      /dev/block/by-name/pi_img                    flags=display="pi_img"
+
 
 # External-Devices (SDCARD | OTG)
 /external_sd    auto     /dev/block/mmcblk0p1  /dev/block/mmcblk0     flags=display="Micro_SDcard";storage;wipeingui;removable;fsflags="utf8"
