@@ -144,6 +144,3 @@ on boot
 on property:twrp.booted=1
     chmod 0777 /i2c-hid.ko
     insmod /i2c-hid.ko
-
-on property:sys.usb.config=fastboot && ro.twrp.fastbootd=1
-   start fastbootd
