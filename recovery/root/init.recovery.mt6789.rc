@@ -146,6 +146,6 @@ on property:twrp.booted=1
     insmod /i2c-hid.ko
 
 on property:ro.twrp.fastbootd=1
-   resetprop 
+   resetprop sys.usb.config fastboot
 
 
