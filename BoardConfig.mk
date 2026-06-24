@@ -90,12 +90,18 @@ TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
 # SAR
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
 BOARD_SUPPRESS_SECURE_ERASE := true
+BOARD_ROOT_EXTRA_FOLDERS += \
+    metadata \
+    protect_f \
+    protect_s \
+    mnt \
+    persist
+
 BOARD_ROOT_EXTRA_SYMLINKS := \
     /mnt/vendor/protect_f:/protect_f \
     /mnt/vendor/protect_s:/protect_s \
     /mnt/vendor/persist:/persist
 
-/mnt/vendor/protect_f
 # AVB
 BOARD_AVB_ENABLE := true
 
