@@ -128,7 +128,6 @@ on post-fs-data
     mkdir /data/vendor_de/0 0770 system system
     mkdir /data/vendor/hardware 0771 root root
     start health-hal-2-1
-    setprop sys.usb.config adb
 
 on boot
     mkdir /mnt/vendor/persist
@@ -149,5 +148,11 @@ service fastbootd_check /sbin/fix.sh
     oneshot
     disabled
 
-on property:twrp.booted=1 && property:ro.twrp.fastbootd=1
-   start fastbootd_check
+on property:ro.twrp.booted=1 && property:ro.twrp.fastbootd=1
+    start fastbootd_check
+
+on property:twrp.boot=1 && property:ro.twrp.fastbootd=0
+    setprop sys.usb.config adb
+    setprop persist.sys.usb.config adb
+    setprop sys.usb.state adb
+    start adbd
