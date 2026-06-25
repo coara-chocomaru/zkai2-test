@@ -150,9 +150,3 @@ service fastbootd_check /sbin/fix.sh
 
 on property:ro.twrp.booted=1 && property:ro.twrp.fastbootd=1
     start fastbootd_check
-
-on property:twrp.boot=1 && property:ro.twrp.fastbootd=0
-    setprop sys.usb.config adb
-    setprop persist.sys.usb.config adb
-    setprop sys.usb.state adb
-    start adbd
