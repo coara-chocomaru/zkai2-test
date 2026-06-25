@@ -55,6 +55,12 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-mtkimpl \
     android.hardware.boot@1.2-mtkimpl.recovery
 
+PRODUCT_STATIC_BOOT_CONTROL_HAL := \
+    bootctrl \
+    libgptutils \
+    libz \
+    libcutils
+
 PRODUCT_PACKAGES_DEBUG += \
     bootctrl
 
