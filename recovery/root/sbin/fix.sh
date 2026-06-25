@@ -3,10 +3,8 @@
 pid=$(getprop sys.usb.pid)
 
 if [ "$pid" != "0x4EE0" ] && [ "$pid" != "0x4ee0" ] && [ "$pid" != "4EE0" ] && [ "$pid" != "4ee0" ]; then
-    if grep -q "twrpfastboot=1" /proc/cmdline; then
-        resetprop sys.usb.pid 0x4EE0
-        start fastbootd
-    fi
+    resetprop sys.usb.pid 0x4EE0
+    start fastbootd
     exit 0
 fi
 
