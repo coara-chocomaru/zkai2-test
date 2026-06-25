@@ -65,5 +65,6 @@
 /apusys2            emmc      /dev/block/by-name/apusys2               flags=display="apusys2"
 
 # External-Devices (SDCARD | OTG)
-/external_sd    auto     /dev/block/mmcblk0p1  /dev/block/mmcblk0     flags=display="Micro_SDcard";storage;wipeingui;removable;fsflags="utf8"
-/usbotg         auto     /dev/block/sdd1       /dev/block/sdd         flags=display="Usb_Otg";storage;wipeingui;removable;fsflags="utf8"
+/storage            auto   /data/media/0                                   flags=display="Internal Storage";backup=1;usermrf;fsflags="bind,utf8";removable
+/external_sd        auto   /dev/block/mmcblk1p1 /dev/block/mmcblk0p1       flags=display="External_SDcard";storage;wipeingui;removable
+/usb_otg            auto   /dev/block/sda1 /dev/block/sda /dev/block/sdd1  flags=storage;wipeingui;removable
