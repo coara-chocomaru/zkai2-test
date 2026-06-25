@@ -94,7 +94,6 @@ BOARD_ROOT_EXTRA_FOLDERS += \
     metadata \
     protect_f \
     protect_s \
-    mnt \
     persist
 
 BOARD_ROOT_EXTRA_SYMLINKS := \
