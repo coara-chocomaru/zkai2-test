@@ -147,6 +147,3 @@ on property:twrp.booted=1
 service fastbootd_check /sbin/fix.sh
     oneshot
     disabled
-
-on property:ro.twrp.booted=1 && property:ro.twrp.fastbootd=1
-    start fastbootd_check
