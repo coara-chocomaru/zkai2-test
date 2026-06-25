@@ -56,6 +56,11 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-service \
     android.hardware.boot@1.2-mtkimpl.recovery
 
+PRODUCT_PACKAGES += \
+    android.hardware.boot@1.0 \
+    android.hardware.boot@1.1 \
+    android.hardware.boot@1.2
+
 PRODUCT_PACKAGES_DEBUG += \
     bootctrl
 
@@ -72,7 +77,6 @@ PRODUCT_PACKAGES += \
 
 # Fastbootd
 PRODUCT_PACKAGES += \
-    libgptutils \
     fastbootd
 
 # Build MT-PL-Utils
