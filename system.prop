@@ -13,7 +13,4 @@ ro.adb.secure=0
 ro.board.first_api_level=31
 ro.custom.build.product=p909-JJ33-IMT-64-64g4g-fhd-a1-bom2-t0-cts-JP
 ro.debuggable=1
-persist.sys.usb.config=mtp,adb
-persist.service.adb.enable=1
-persist.service.debuggable=1
 keymaster_ver=4.1
