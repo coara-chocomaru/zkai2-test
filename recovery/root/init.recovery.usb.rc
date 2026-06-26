@@ -48,6 +48,7 @@ on boot
     chmod a+x /config/usb_gadget/g1/strings/0x409
     chmod 0666 /config/usb_gadget/g1/strings/0x409/product
     write /sys/module/block/parameters/events_dfl_poll_msecs 1000
+    start health-hal-2-1
 
 on property:init.svc.adbd=running
     setprop sys.usb.ffs.ready 1
