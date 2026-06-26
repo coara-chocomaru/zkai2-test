@@ -18,9 +18,6 @@
 /persist            ext4      /dev/block/by-name/persist               flags=display="persist"
 /persist_image      emmc      /dev/block/by-name/persist               flags=display="persist";backup=1;flashimg=1
 
-# Vendor protect partitions
-/protect_f          ext4      /dev/block/by-name/protect1              flags=display="protect_f"
-/protect_s          ext4      /dev/block/by-name/protect2              flags=display="protect_s"
 
 # Firmware partitions
 /para               emmc      /dev/block/by-name/para                  flags=display="para"
