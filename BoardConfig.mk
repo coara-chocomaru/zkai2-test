@@ -104,8 +104,8 @@ BOARD_ROOT_EXTRA_SYMLINKS := \
     /mnt/vendor/protect_f:/protect_f \
     /mnt/vendor/protect_s:/protect_s \
     /mnt/vendor/persist:/persist \
-    /mnt/vendor/nvdata:nvdata \
-    /mnt/vendor/nvcfg:nvcfg
+    /mnt/vendor/nvdata:/nvdata \
+    /mnt/vendor/nvcfg:/nvcfg
 
 # AVB
 BOARD_AVB_ENABLE := true
