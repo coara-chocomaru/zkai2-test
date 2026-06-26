@@ -166,7 +166,7 @@ RECOVERY_SDCARD_ON_DATA := true
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 
 # VINTF
-# DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/recovery/root/vendor/etc/vintf/manifest.xml
+DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/recovery/root/vendor/etc/vintf/manifest.xml
 
 # display
 TARGET_SCREEN_DENSITY := 240
@@ -221,7 +221,7 @@ TW_HAS_MTP := true
 TW_INCLUDE_FUSE_EXFAT := true
 TW_EXCLUDE_APEX := true
 TW_EXCLUDE_TWRPAPP := true
-TW_EXCLUDE_DEFAULT_USB_INIT := true
+# TW_EXCLUDE_DEFAULT_USB_INIT := true
 TW_BACKUP_EXCLUSIONS := /data/fonts/files
 RECOVERY_TOUCHSCREEN_SWAP_XY := true
 RECOVERY_TOUCHSCREEN_FLIP_Y := true
