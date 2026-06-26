@@ -14,11 +14,6 @@
 /logo               emmc      /dev/block/by-name/logo                  flags=display="logo";backup=1
 /misc               emmc      /dev/block/by-name/misc                  flags=display="misc";backup=1
 
-# Persistent Firmware & Properties
-/persist            ext4      /dev/block/by-name/persist               flags=display="persist"
-/persist_image      emmc      /dev/block/by-name/persist               flags=display="persist";backup=1;flashimg=1
-
-
 # Firmware partitions
 /para               emmc      /dev/block/by-name/para                  flags=display="para"
 /nvdata             ext4      /dev/block/by-name/nvdata                flags=display="NvData"
