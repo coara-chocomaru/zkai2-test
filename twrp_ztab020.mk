@@ -23,8 +23,7 @@ PRODUCT_GMS_CLIENTID_BASE := android-gsl
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.build.product=Zkai-study-Tab \
     ro.product.board=mgvi_64_armv82 \
-    ro.product.device=Zkai-study-Tab \
-    persist.sys.usb.config=mtp,adb
+    ro.product.device=Zkai-study-Tab
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRIVATE_BUILD_DESC="hal_mgvi_64_armv82-user 12 SP1A.210812.016 1rck61v164bspP28 dev-keys"
 
