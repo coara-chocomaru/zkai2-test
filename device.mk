@@ -77,7 +77,12 @@ PRODUCT_PACKAGES += \
 
 # Fastbootd
 PRODUCT_PACKAGES += \
-    fastbootd
+    libgptutils \
+    libz \
+    libcutils \
+    fastbootd \
+    android.hardware.fastboot@1.0-impl-mock \
+    android.hardware.fastboot@1.0-impl-mock.recovery
 
 # Build MT-PL-Utils
 PRODUCT_PACKAGES += \
