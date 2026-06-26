@@ -80,10 +80,6 @@ PRODUCT_PACKAGES += \
     android.hardware.fastboot@1.1-impl-mock \
     android.hardware.fastboot@1.1-impl-mock.recovery
 
-PRODUCT_PACKAGES += \
-    create_pl_dev \
-    create_pl_dev.recovery
-
 # Build MT-PL-Utils
 PRODUCT_PACKAGES += \
     mtk_plpath_utils \
