@@ -143,7 +143,3 @@ on boot
 on property:twrp.booted=1
     chmod 0777 /i2c-hid.ko
     insmod /i2c-hid.ko
-
-service fastbootd_check /sbin/fix.sh
-    oneshot
-    disabled
