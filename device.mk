@@ -62,8 +62,13 @@ PRODUCT_PACKAGES_DEBUG += \
 
 PRODUCT_PACKAGES += \
     bootctrl \
+    bootctrl.default \
     bootctrl.recovery \
     libmtk_bsg
+
+PRODUCT_PACKAGES += \
+    bootctrl.mt6789 \
+    bootctrl.mt6789.recovery
 
 # Health
 PRODUCT_PACKAGES += \
@@ -77,8 +82,8 @@ PRODUCT_PACKAGES += \
     libz \
     libcutils \
     fastbootd \
-    android.hardware.fastboot@1.1-impl-mock \
-    android.hardware.fastboot@1.1-impl-mock.recovery
+    android.hardware.fastboot@1.0-impl-mock \
+    android.hardware.fastboot@1.0-impl-mock.recovery
 
 # Build MT-PL-Utils
 PRODUCT_PACKAGES += \
