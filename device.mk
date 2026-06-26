@@ -80,8 +80,7 @@ PRODUCT_PACKAGES += \
     libz \
     libcutils \
     fastbootd \
-    android.hardware.fastboot@1.0-impl-mock \
-    android.hardware.fastboot@1.0-impl-mock.recovery
+    android.hardware.fastboot@1.0-impl-mock
 
 # Build MT-PL-Utils
 PRODUCT_PACKAGES += \
