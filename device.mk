@@ -56,11 +56,6 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-service \
     android.hardware.boot@1.2-mtkimpl.recovery
 
-PRODUCT_PACKAGES += \
-    android.hardware.boot@1.0 \
-    android.hardware.boot@1.1 \
-    android.hardware.boot@1.2
-
 PRODUCT_PACKAGES_DEBUG += \
     bootctrl
 
@@ -86,8 +81,7 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     create_pl_dev \
-    create_pl_dev.recovery \
-    checkpoint_gc
+    create_pl_dev.recovery
 
 # Build MT-PL-Utils
 PRODUCT_PACKAGES += \
