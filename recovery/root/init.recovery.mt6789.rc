@@ -13,10 +13,6 @@ on fs && property:ro.debuggable=0
 on fs
     wait /dev/block/platform/soc/11270000.ufshci
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
-    mkdir /mnt/vendor 0755 system system
-    mkdir /mnt/vendor/persist 0755 system system
-    mkdir /mnt/vendor/protect_f 0770 system system
-    mkdir /mnt/vendor/protect_s 0770 system system
     mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw wait
     mount ext4 /dev/block/by-name/protect1 /mnt/vendor/protect_f rw wait
     mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s rw wait
