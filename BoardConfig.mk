@@ -166,8 +166,8 @@ RECOVERY_SDCARD_ON_DATA := true
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 
 # VINTF
-DEVICE_MANIFEST_FILE := $(DEVICE_PATH)/recovery/root/vendor/etc/vintf/manifest.xml
-
+DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/recovery/root/vendor/etc/vintf/manifest.xml
+DEVICE_MATRIX_FILE += $(DEVICE_PATH)/recovery/root/system/etc/vintf/
 # display
 TARGET_SCREEN_DENSITY := 240
 BOARD_USE_FRAMEBUFFER_ALPHA_CHANNEL := true
