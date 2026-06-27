@@ -57,6 +57,12 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-mtkimpl \
     android.hardware.boot@1.2-mtkimpl.recovery
 
+# HAL .so
+PRODUCT_PACKAGES += \
+    android.hardware.boot@1.0 \
+    android.hardware.boot@1.1 \
+    android.hardware.boot@1.2
+
 # 1.0
 PRODUCT_PACKAGES += \
 android.hardware.boot@1.0-impl \
