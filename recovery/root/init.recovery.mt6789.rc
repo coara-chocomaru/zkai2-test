@@ -18,7 +18,6 @@ on fs
     mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s rw wait
     mkdir /mnt/vendor/persist/t6_twrp 0755 system system
     mkdir /mnt/vendor/protect_f/tee_twrp 0755 system system
-    exec u:r:recovery:s0 system -- /vendor/bin/trustkernel.twrp.sh
     install_keyring
     setprop crypto.ready 1
 
@@ -41,6 +40,7 @@ on post-fs-data
 
 on boot
     start mtk.plpath.utils.link
+    exec u:r:recovery:s0 system -- /vendor/bin/trustkernel.twrp.sh
 
 on property:persist.vendor.mtk.pl_lnk=1
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
@@ -76,6 +76,19 @@ service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
     disabled
     seclabel u:r:recovery:s0
 
+service hwservicemanager /system/bin/hwservicemanager
+    class core
+    user root
+    group root readproc
+    disabled
+    writepid /dev/cpuset/system-background/tasks
+
+service servicemanager /system/bin/servicemanager
+    class core
+    user root
+    group root
+    disabled
+
 service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     interface android.hardware.gatekeeper@1.0::IGatekeeper default
     user root
@@ -91,7 +104,12 @@ service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keym
     disabled
     seclabel u:r:recovery:s0
 
-on property:hwservicemanager.ready=true
+on property:crypto.ready=1
+    start hwservicemanager
+    start servicemanager
+    wait_for_prop hwservicemanager.ready true 5
+    stop teed
+    start teed
     start vendor.gatekeeper-1-0
     start vendor.keymint-trustkernel
 
@@ -99,21 +117,29 @@ on property:ro.crypto.state=unsupported
     stop teed
     stop vendor.gatekeeper-1-0
     stop vendor.keymint-trustkernel
+    stop hwservicemanager
+    stop servicemanager
 
 on property:ro.crypto.state=unencrypted
     stop teed
     stop vendor.gatekeeper-1-0
     stop vendor.keymint-trustkernel
+    stop hwservicemanager
+    stop servicemanager
 
 on property:twrp.decrypt.done=true
     stop teed
     stop vendor.gatekeeper-1-0
     stop vendor.keymint-trustkernel
+    stop hwservicemanager
+    stop servicemanager
 
 on property:crypto.ready=0
     stop teed
     stop vendor.gatekeeper-1-0
     stop vendor.keymint-trustkernel
+    stop hwservicemanager
+    stop servicemanager
 
 on property:twrp.booted=1
     chmod 0777 /i2c-hid.ko
