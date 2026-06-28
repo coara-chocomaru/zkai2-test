@@ -17,10 +17,7 @@ on fs
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
 
 on early-fs
-    start vold
-
-on late-fs
-    mount_all /first_stage_ramdisk/fstab.mt6789 --late
+    
 
 on post-fs
     start boot-hal-1-2
