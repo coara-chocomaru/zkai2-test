@@ -15,6 +15,7 @@ on fs
     install_keyring
     wait /dev/block/platform/soc/11270000.ufshci
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
+    chmod 0777 /trustkernel.twrp.sh
 
 on early-fs
     start vold
@@ -24,7 +25,6 @@ on late-fs
 
 on post-fs
     start boot-hal-1-2
-
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
 
