@@ -17,7 +17,10 @@ on fs
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
 
 on early-fs
-    
+    start vold
+
+on late-fs
+    mount_all /first_stage_ramdisk/fstab.mt6789 --late
 
 on post-fs
     start boot-hal-1-2
@@ -48,7 +51,6 @@ on boot
     mkdir /mnt/vendor/persist/t6_twrp
     mkdir /mnt/vendor/protect_f/tee_twrp
     chmod 0777 /trustkernel.twrp.sh
-
     exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
 
     start teed
