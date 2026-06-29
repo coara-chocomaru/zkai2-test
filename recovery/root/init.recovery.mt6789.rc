@@ -59,24 +59,15 @@ on post-fs
 on boot
     start mtk.plpath.utils.link
 
-    mkdir /mnt/vendor/persist
-    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
     mkdir /mnt/vendor/protect_f
     mkdir /mnt/vendor/protect_s
     mount ext4 /dev/block/by-name/protect1 /mnt/vendor/protect_f rw
     mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s rw
 
-    restorecon /mnt/vendor/persist
-    mkdir /mnt/vendor/persist/t6
-    chown system system /mnt/vendor/persist/t6
-    restorecon /mnt/vendor/persist/t6
-
     restorecon /mnt/vendor/protect_f
     mkdir /mnt/vendor/protect_f/tee
     chown system system /mnt/vendor/protect_f/tee
     restorecon /mnt/vendor/protect_f/tee
-
-    mkdir /mnt/vendor/persist/t6_twrp
     mkdir /mnt/vendor/protect_f/tee_twrp
     chmod 0777 /trustkernel.twrp.sh
     exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
@@ -94,7 +85,6 @@ on post-fs-data
     mkdir /data/vendor_de/0 0770 system system
     mkdir /data/vendor/hardware 0771 root root
 
-    # [E5] teed のデータパスを事前に作成
     mkdir /data/vendor/t6 0771 root root
     mkdir /data/vendor/t6/fs 0771 root root
     mkdir /data/vendor/t6/app 0771 root root
@@ -195,7 +185,6 @@ service teed /vendor/bin/teed \
     --systapath /vendor/app/t6 \
     --rpmbdev /dev/mmcblk0rpmb \
     --rpmbdev /dev/rpmb0 \
-    --prot /mnt/vendor/persist/t6 \
     --prot /mnt/vendor/protect_f/tee \
     --prebuilt /vendor/app/t6/data \
     --logpath /data/vendor/t6/tkcore.log \
