@@ -72,7 +72,11 @@ on boot
     chmod 0777 /trustkernel.twrp.sh
     exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
 
+    start hwservicemanager
+    start servicemanager
     start teed
+    setprop vendor.trustkernel.fs.mode 3
+    setprop vendor.trustkernel.fs.state prepare
 
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
