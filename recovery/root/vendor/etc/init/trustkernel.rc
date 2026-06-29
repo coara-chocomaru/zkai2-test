@@ -25,17 +25,14 @@ on property:vendor.trustkernel.fs.state=prepare
 	restorecon /data/vendor/t6/app
 	setprop vendor.trustkernel.fs.state ready
 
-# For non-encrypted case
 on property:ro.crypto.state=unencrypted
 	setprop vendor.trustkernel.fs.mode 1
 	setprop vendor.trustkernel.fs.state prepare
 
-# For FDE/encrypted successfully
 on property:vold.decrypt=trigger_restart_framework
 	setprop vendor.trustkernel.fs.mode 2
 	setprop vendor.trustkernel.fs.state prepare
 
-# For FBE/encrypted successfully
 on property:ro.crypto.type=file && property:ro.crypto.state=encrypted
 	setprop vendor.trustkernel.fs.mode 3
 	setprop vendor.trustkernel.fs.state prepare
