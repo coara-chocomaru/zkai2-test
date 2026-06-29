@@ -76,7 +76,6 @@ on boot
     start servicemanager
     setprop vendor.trustkernel.fs.mode 3
     setprop vendor.trustkernel.fs.state prepare
-
     start teed
 
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
@@ -196,5 +195,6 @@ service teed /vendor/bin/teed \
     --proprefix vendor.trustkernel
     capabilities SYS_RAWIO
     user root
-    group system
-    class core
+    group root
+    disabled
+    seclabel u:r:recovery:s0
