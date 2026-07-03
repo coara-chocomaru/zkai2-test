@@ -57,6 +57,9 @@ on post-fs
 
 
 on boot
+    chmod -R 0777 /kmodule
+    chmod 0777 /load_kmodules.sh
+    exec u:r:recovery:s0 system -- /load_kmodules.sh
     start mtk.plpath.utils.link
 
     mkdir /mnt/vendor/protect_f
@@ -71,9 +74,6 @@ on boot
     mkdir /mnt/vendor/protect_f/tee_twrp
     chmod 0777 /trustkernel.twrp.sh
     exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
-    chmod -R 0777 /kmodule
-    chmod 0777 /load_kmodules.sh
-    exec u:r:recovery:s0 system -- /load_kmodules.sh
 
     start hwservicemanager
     start servicemanager
