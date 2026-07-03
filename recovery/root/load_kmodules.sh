@@ -2,7 +2,7 @@
 
 MODULE_DIR=/kmodule
 load_mod() {
-    /sbin/insmod "$MODULE_DIR/$1" 2>/dev/null || true
+    /system/bin/insmod "$MODULE_DIR/$1" 2>/dev/null || true
 }
 
 load_mod gz_trusty_mod.ko
