@@ -88,6 +88,9 @@ PRODUCT_PACKAGES += \
     libz \
     libcutils \
     fastbootd \
+    lpdump \
+    lpunpack \
+    lpmake \
     android.hardware.fastboot@1.0-impl-mock
 
 # Build MT-PL-Utils
