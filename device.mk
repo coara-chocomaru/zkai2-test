@@ -102,10 +102,6 @@ PRODUCT_PACKAGES += \
 TARGET_RECOVERY_DEVICE_MODULES += \
     android.hardware.keymaster@4.1
 
-TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@4.1.so
-
-
 # Keymint
 PRODUCT_PACKAGES += \
     android.hardware.security.keymint \
@@ -120,12 +116,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.1
 
-TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@4.1.so
-
 # Drm
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.4
+
+PRODUCT_COPY_FILES += \
+    $(TARGET_OUT_EXECUTABLES)/mtk_plpath_utils:recovery/root/system/bin/mtk_plpath_utils
 
 # libion & libxml2
 TARGET_RECOVERY_DEVICE_MODULES += libion
