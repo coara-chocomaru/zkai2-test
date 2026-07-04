@@ -90,21 +90,17 @@ TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
 
 TW_LOAD_VENDOR_DLKM_MODULES := \
     gz_trusty_mod.ko \
-    mtk-mbox.ko \
     mtk-afe-external.ko \
     mtk-pwm.ko \
     i2c-hid.ko \
     focaltech_fp.ko \
     rps_perf.ko \
     gz_ipc_mod.ko \
-    mtk_rpmsg_mbox.ko \
     gz_tz_system.ko \
     iommu_gz.ko \
     trusted_mem.ko \
     cmdq-sec-drv.ko \
-    mtk_tinysys_ipi.ko \
     mtk_sec_heap.ko \
-    scp.ko \
     gz_main_mod.ko \
     mdp_drv_mt6789.ko \
     mtk_u_ether.ko \
