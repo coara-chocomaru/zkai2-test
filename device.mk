@@ -107,6 +107,7 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     android.hardware.keymaster@4.1 \
     android.hardware.keymaster@3.0 \
     libion \
+    mtk_plpath_utils \
     libmtk_bsg
 
 
@@ -129,8 +130,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.4
 
-PRODUCT_COPY_FILES += \
-    $(TARGET_OUT_EXECUTABLES)/mtk_plpath_utils:recovery/root/system/bin/mtk_plpath_utils
+RECOVERY_BINARY_SOURCE_FILES += $(TARGET_OUT_EXECUTABLES)/mtk_plpath_utils
+
 
 # libion & libxml2
 TARGET_RECOVERY_DEVICE_MODULES += libion
