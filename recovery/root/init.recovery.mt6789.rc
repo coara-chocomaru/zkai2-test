@@ -1,5 +1,3 @@
-import /vendor/etc/init/trustkernel.rc
-
 on early-init
     mount cgroup none /dev/cpuset cpuset
     mkdir /dev/cpuset/foreground
@@ -16,9 +14,7 @@ on init
     setprop sys.usb.controller "musb-hdrc"
     setprop sys.usb.ffs.aio_compat 0
     export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
-
     symlink /sys/devices/platform/soc/10026000.pwrap/10026000.pwrap:mt6366/mt6358-gauge /dev/gauge
-
     chmod 0660 /dev/alarm
     chown root system /dev/alarm
     chmod -R 0777 /kmodule
@@ -33,13 +29,8 @@ on fs && property:ro.debuggable=0
     start adbd
 
 on fs
-    install_keyring
     wait /dev/block/platform/soc/11270000.ufshci
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
-    chmod 0777 /trustkernel.twrp.sh
-
-on early-fs
-    start vold
 
 on late-fs
     mount_all /first_stage_ramdisk/fstab.mt6789 --late
@@ -47,30 +38,25 @@ on late-fs
 on post-fs
     chmod 0666 /dev/gz_kree
     chown root root /dev/gz_kree
-
     mkdir /mnt/vendor/nvcfg
     mount ext4 /dev/block/by-name/nvcfg /mnt/vendor/nvcfg rw wait
     chown system system /mnt/vendor/nvcfg
     chmod 0771 /mnt/vendor/nvcfg
     restorecon_recursive /mnt/vendor/nvcfg
-
     mkdir /mnt/vendor/nvdata
     mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata rw wait
     chown root system /mnt/vendor/nvdata
     chmod 0771 /mnt/vendor/nvdata
     restorecon_recursive /mnt/vendor/nvdata
-
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
 
 on boot
     start mtk.plpath.utils.link
-
     mkdir /mnt/vendor/protect_f
     mkdir /mnt/vendor/protect_s
     mount ext4 /dev/block/by-name/protect1 /mnt/vendor/protect_f rw
     mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s rw
-
     restorecon /mnt/vendor/protect_f
     mkdir /mnt/vendor/protect_f/tee
     chown system system /mnt/vendor/protect_f/tee
@@ -78,19 +64,14 @@ on boot
     mkdir /mnt/vendor/protect_f/tee_twrp
     chmod 0777 /trustkernel.twrp.sh
     exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
-
     start hwservicemanager
     start servicemanager
-
     setprop vendor.trustkernel.fs.mode 3
     setprop vendor.trustkernel.fs.state prepare
-
     start teed
     wait /dev/tkcore_admin 10
-
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
-
     symlink /dev/block/by-name/lk1 /dev/block/by-name/bootloader1
     symlink /dev/block/by-name/lk2 /dev/block/by-name/bootloader2
 
@@ -98,71 +79,72 @@ on post-fs-data
     mkdir /data/vendor_de 0770 system system
     mkdir /data/vendor_de/0 0770 system system
     mkdir /data/vendor/hardware 0771 root root
-
     mkdir /data/vendor/t6 0771 root root
     mkdir /data/vendor/t6/fs 0771 root root
     mkdir /data/vendor/t6/app 0771 root root
-
     start health-hal-2-1
 
-on property:hwservicemanager.ready=true
-    start vendor.gatekeeper-1-0
-    start vendor.keymint-trustkernel
-    start keymaster_attestation-1-1
+# ============================================================
+# ============================================================
+# on property:hwservicemanager.ready=true
+#     start vendor.gatekeeper-1-0
+#     start vendor.keymint-trustkernel
+#     start keymaster_attestation-1-1
 
-on property:vendor.trustkernel.ready=1
-    setprop crypto.ready 1
+# on property:vendor.trustkernel.ready=1
+#     setprop crypto.ready 1
 
-on property:crypto.ready=1
-    start keystore2
-    start vendor.boot-hal-1-2
+# on property:crypto.ready=1
+#     start keystore2
+#     start vendor.boot-hal-1-2
 
-on property:ro.crypto.state=unsupported
-    stop teed
-    stop vendor.gatekeeper-1-0
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
+# on property:ro.crypto.state=unsupported
+#     stop teed
+#     stop vendor.gatekeeper-1-0
+#     stop vendor.keymint-trustkernel
+#     stop keymaster_attestation-1-1
 
-on property:ro.crypto.state=unencrypted
-    stop teed
-    stop vendor.gatekeeper-1-0
-    stop vendor.keymint-trustkernel
+# on property:ro.crypto.state=unencrypted
+#     stop teed
+#     stop vendor.gatekeeper-1-0
+#     stop vendor.keymint-trustkernel
 
-on property:twrp.decrypt.done=true
-    stop teed
-    stop vendor.gatekeeper-1-0
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
+# on property:twrp.decrypt.done=true
+#     stop teed
+#     stop vendor.gatekeeper-1-0
+#     stop vendor.keymint-trustkernel
+#     stop keymaster_attestation-1-1
 
-on property:crypto.ready=0
-    stop teed
-    stop vendor.gatekeeper-1-0
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
+# on property:crypto.ready=0
+#     stop teed
+#     stop vendor.gatekeeper-1-0
+#     stop vendor.keymint-trustkernel
+#     stop keymaster_attestation-1-1
 
-on property:persist.vendor.mtk.pl_lnk=1
-    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
-    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
-    symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
-    symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
+# on property:persist.vendor.mtk.pl_lnk=1
+#     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+#     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+#     symlink /dev/block/mapper/pl_a /dev/block/platform/bootdevice/by-name/preloader_raw_a
+#     symlink /dev/block/mapper/pl_b /dev/block/platform/bootdevice/by-name/preloader_raw_b
 
-on property:vendor.mtk.boot0_linka=1
-    symlink /dev/block/sda /dev/block/mmcblk0boot0
+# on property:vendor.mtk.boot0_linka=1
+#     symlink /dev/block/sda /dev/block/mmcblk0boot0
 
-on property:vendor.mtk.boot0_linkb=1
-    symlink /dev/block/sdb /dev/block/mmcblk0boot0
+# on property:vendor.mtk.boot0_linkb=1
+#     symlink /dev/block/sdb /dev/block/mmcblk0boot0
 
-on property:vendor.mtk.boot0_linkc=1
-    symlink /dev/block/sdc /dev/block/mmcblk0boot0
+# on property:vendor.mtk.boot0_linkc=1
+#     symlink /dev/block/sdc /dev/block/mmcblk0boot0
 
-on property:vendor.mtk.boot1_linka=1
-    symlink /dev/block/sda /dev/block/mmcblk0boot1
+# on property:vendor.mtk.boot1_linka=1
+#     symlink /dev/block/sda /dev/block/mmcblk0boot1
 
-on property:vendor.mtk.boot1_linkb=1
-    symlink /dev/block/sdb /dev/block/mmcblk0boot1
+# on property:vendor.mtk.boot1_linkb=1
+#     symlink /dev/block/sdb /dev/block/mmcblk0boot1
 
-on property:vendor.mtk.boot1_linkc=1
-    symlink /dev/block/sdc /dev/block/mmcblk0boot1
+# on property:vendor.mtk.boot1_linkc=1
+#     symlink /dev/block/sdc /dev/block/mmcblk0boot1
+# ============================================================
 
 service mtk.plpath.utils.link /system/bin/mtk_plpath_utils
     class main
