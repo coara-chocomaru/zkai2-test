@@ -100,7 +100,16 @@ PRODUCT_PACKAGES += \
 
 # Additional Target Libraries
 TARGET_RECOVERY_DEVICE_MODULES += \
-    android.hardware.keymaster@4.1
+    android.hardware.boot@1.2-mtkimpl.so \
+    android.hardware.boot@1.0.so \
+    android.hardware.boot@1.1.so \
+    android.hardware.boot@1.2.so \
+    android.hardware.keymaster@4.1.so \
+    android.hardware.keymaster@3.0.so \
+    libion.so \
+    libmtk_bsg.so
+
+
 
 # Keymint
 PRODUCT_PACKAGES += \
