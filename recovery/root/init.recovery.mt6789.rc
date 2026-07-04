@@ -8,6 +8,8 @@ on early-init
     chown system system /dev/cpuset/foreground/tasks
     chmod 0664 /dev/cpuset/foreground/tasks
     write /proc/sys/kernel/audit_backlog_limit 256
+    chown root system /proc/lk_env
+    chmod 0660 /proc/lk_env
 
 on init
     setprop sys.usb.configfs 1
