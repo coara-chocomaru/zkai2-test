@@ -114,7 +114,10 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     mtk_plpath_utils \
     libmtk_bsg
 
-
+RECOVERY_BINARY_SOURCE_FILES += \
+    $(TARGET_OUT_EXECUTABLES)/android.hardware.boot@1.0-service \
+    $(TARGET_OUT_EXECUTABLES)/android.hardware.boot@1.2-service \
+    $(TARGET_OUT_EXECUTABLES)/mtk_plpath_utils
 
 # Keymint
 PRODUCT_PACKAGES += \
@@ -133,9 +136,6 @@ PRODUCT_PACKAGES += \
 # Drm
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.4
-
-RECOVERY_BINARY_SOURCE_FILES += $(TARGET_OUT_EXECUTABLES)/mtk_plpath_utils
-
 
 # libion & libxml2
 TARGET_RECOVERY_DEVICE_MODULES += libion
