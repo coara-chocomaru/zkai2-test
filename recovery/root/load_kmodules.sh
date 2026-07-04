@@ -26,3 +26,4 @@ load_mod mtk_usb_f_rndis.ko
 
 
 setprop vendor.all.modules.ready 1
+resetprop has_battery_removed 0
