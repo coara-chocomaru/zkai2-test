@@ -111,7 +111,7 @@ on property:vendor.trustkernel.ready=1
     setprop crypto.ready 1
 
 on property:crypto.ready=1
-    start keystore2
+    stop keystore2
     start vendor.boot-hal-1-2
 
 on property:ro.crypto.state=unsupported
