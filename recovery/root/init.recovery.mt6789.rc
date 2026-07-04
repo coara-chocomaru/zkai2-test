@@ -189,14 +189,14 @@ service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keym
 
 service teed /vendor/bin/teed \
     --tzdev /dev/tkcore_admin \
-    --datapath /data/vendor/t6/fs \
-    --sptapath /data/vendor/t6/app \
+    --datapath /mnt/vendor/protect_f/tee_twrp/fs \
+    --sptapath /mnt/vendor/protect_f/tee_twrp/app \
     --systapath /vendor/app/t6 \
     --rpmbdev /dev/mmcblk0rpmb \
     --rpmbdev /dev/rpmb0 \
     --prot /mnt/vendor/protect_f/tee \
     --prebuilt /vendor/app/t6/data \
-    --logpath /data/vendor/t6/tkcore.log \
+    --logpath /mnt/vendor/protect_f/tee_twrp/tkcore.log \
     --proprefix vendor.trustkernel
     capabilities SYS_RAWIO
     user root
