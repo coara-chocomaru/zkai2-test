@@ -61,7 +61,6 @@ on post-fs
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
 
-
 on boot
     start mtk.plpath.utils.link
 
@@ -80,9 +79,14 @@ on boot
 
     start hwservicemanager
     start servicemanager
+
+    mount ext4 /dev/block/mapper/vendor_a /vendor ro wait
+
     setprop vendor.trustkernel.fs.mode 3
     setprop vendor.trustkernel.fs.state prepare
+
     start teed
+    wait /dev/tkcore_admin 10
 
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
@@ -100,7 +104,6 @@ on post-fs-data
     mkdir /data/vendor/t6/app 0771 root root
 
     start health-hal-2-1
-
 
 on property:hwservicemanager.ready=true
     start vendor.gatekeeper-1-0
