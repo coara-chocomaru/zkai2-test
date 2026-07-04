@@ -75,6 +75,13 @@ on boot
 
     setprop vendor.trustkernel.fs.mode 3
     setprop vendor.trustkernel.fs.state prepare
+    mkdir /mnt/vendor/protect_f/tee_twrp 0771 system system
+    mkdir /mnt/vendor/protect_f/tee_twrp/fs 0771 system system
+    mkdir /mnt/vendor/protect_f/tee_twrp/app 0771 system system
+    chown system system /mnt/vendor/protect_f/tee_twrp
+    chown system system /mnt/vendor/protect_f/tee_twrp/fs
+    chown system system /mnt/vendor/protect_f/tee_twrp/app
+    restorecon_recursive /mnt/vendor/protect_f/tee_twrp
 
     start teed
     wait /dev/tkcore_admin 10
