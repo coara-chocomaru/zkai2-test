@@ -100,6 +100,10 @@ PRODUCT_PACKAGES += \
 
 # Additional Target Libraries
 TARGET_RECOVERY_DEVICE_MODULES += \
+    android.hardware.boot@1.0-impl \
+    android.hardware.boot@1.0-service \
+    android.hardware.boot@1.0-impl.recovery \
+    android.hardware.boot@1.2-service \
     android.hardware.boot@1.2-mtkimpl \
     android.hardware.boot@1.0 \
     android.hardware.boot@1.1 \
