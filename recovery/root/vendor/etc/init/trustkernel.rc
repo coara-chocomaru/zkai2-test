@@ -7,6 +7,7 @@ on post-fs
 	restorecon /mnt/vendor/protect_f/tee
 
 	start teed
+    wait /dev/tkcore_admin 10
 
 on property:vendor.trustkernel.fs.state=prepare
 	write /proc/bootprof "tkcore: prepare basic"
