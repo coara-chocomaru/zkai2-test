@@ -26,4 +26,3 @@ load_mod mtk_usb_f_rndis.ko
 
 
 setprop vendor.all.modules.ready 1
-setprop vendor.all.devices.ready 1
