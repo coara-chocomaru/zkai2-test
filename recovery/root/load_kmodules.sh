@@ -23,3 +23,7 @@ load_mod gz_main_mod.ko
 load_mod mdp_drv_mt6789.ko
 load_mod mtk_u_ether.ko
 load_mod mtk_usb_f_rndis.ko
+
+
+setprop vendor.all.modules.ready 1
+setprop vendor.all.devices.ready 1
