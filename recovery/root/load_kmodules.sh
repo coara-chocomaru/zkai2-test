@@ -6,6 +6,8 @@ load_mod() {
 }
 
 load_mod gz_trusty_mod.ko
+load_mod gz_virtio_mod.ko
+load_mod gz_irq_mod.ko
 load_mod mtk-afe-external.ko
 load_mod mtk-pwm.ko
 load_mod i2c-hid.ko
