@@ -24,7 +24,7 @@ on init
     setprop kmodule 1
 
 on property:kmodule=1
-    exec u:r:recovery:s0 system -- /load_kmodules.sh
+    exec u:r:recovery:s0 -- /load_kmodules.sh
 
 on fs && property:ro.debuggable=0
     write /sys/class/udc/musb-hdrc/device/cmode 2
