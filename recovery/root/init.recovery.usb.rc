@@ -1,3 +1,4 @@
+# USB Gadget configuration using configfs
 on early-init
     write /sys/module/musb_hdrc/parameters/kernel_init_done 1
 
@@ -61,18 +62,20 @@ on property:init.svc.adbd=stopped
 on property:init.svc.fastbootd=stopped
     setprop sys.usb.ffs.fastboot.ready 0
 
-
 on property:sys.usb.config=none && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/idVendor ${sys.usb.vid}
+    write /config/usb_gadget/g1/UDC "none"
     rm /config/usb_gadget/g1/configs/b.1/f1
     rm /config/usb_gadget/g1/configs/b.1/f2
     rm /config/usb_gadget/g1/configs/b.1/f3
     rm /config/usb_gadget/g1/configs/b.1/f4
     rm /config/usb_gadget/g1/configs/b.1/f5
+    rm /config/usb_gadget/g1/configs/b.1/f6
     write /sys/devices/platform/soc/mt_usb/saving 0
-    write /config/usb_gadget/g1/UDC "none"
     stop adbd
     stop fastbootd
+    stop mtp
+    stop ums
     setprop sys.usb.ffs.ready 0
     setprop sys.usb.ffs.fastboot.ready 0
     write /config/usb_gadget/g1/bDeviceClass 0
@@ -118,6 +121,7 @@ on property:sys.usb.ffs.fastboot.ready=1 && property:sys.usb.config=fastboot && 
 
 on property:sys.usb.config=mtp && property:sys.usb.configfs=1
     setprop sys.usb.pid 0x2008
+    start mtp
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mtp"
     write /config/usb_gadget/g1/idVendor ${sys.usb.vid.mtk}
     write /config/usb_gadget/g1/idProduct ${sys.usb.pid}
@@ -128,6 +132,7 @@ on property:sys.usb.config=mtp && property:sys.usb.configfs=1
 on property:sys.usb.config=mtp,adb && property:sys.usb.configfs=1
     setprop sys.usb.pid 0x201D
     start adbd
+    start mtp
 
 on property:sys.usb.ffs.ready=1 && property:sys.usb.config=mtp,adb && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mtp_adb"
@@ -141,6 +146,7 @@ on property:sys.usb.ffs.ready=1 && property:sys.usb.config=mtp,adb && property:s
 
 on property:sys.usb.config=mass_storage && property:sys.usb.configfs=1
     setprop sys.usb.pid 0x2002
+    start ums   # 假设有 ums 服务
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "ums"
     write /config/usb_gadget/g1/idVendor ${sys.usb.vid.mtk}
     write /config/usb_gadget/g1/idProduct ${sys.usb.pid}
@@ -151,6 +157,7 @@ on property:sys.usb.config=mass_storage && property:sys.usb.configfs=1
 on property:sys.usb.config=mass_storage,adb && property:sys.usb.configfs=1
     setprop sys.usb.pid 0x2003
     start adbd
+    start ums
 
 on property:sys.usb.ffs.ready=1 && property:sys.usb.config=mass_storage,adb && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "ums_adb"
