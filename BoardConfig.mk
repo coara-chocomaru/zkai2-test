@@ -90,6 +90,8 @@ TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
 
 TW_LOAD_VENDOR_DLKM_MODULES := \
     gz_trusty_mod.ko \
+    gz_virtio_mod.ko \
+    gz_irq_mod.ko \
     mtk-afe-external.ko \
     mtk-pwm.ko \
     i2c-hid.ko \
