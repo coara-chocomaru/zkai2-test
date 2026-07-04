@@ -1,4 +1,4 @@
-import /vendor/etc/init/trustkernel.rc
+import /init.recovery.trustkernel.rc
 
 on early-init
     mount cgroup none /dev/cpuset cpuset
