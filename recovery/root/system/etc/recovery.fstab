@@ -25,7 +25,7 @@ odm_dlkm /odm_dlkm ext4  ro wait,slotselect,avb,logical,first_stage_mount
 
 
 
-# 177 "vendor/mediatek/proprietary/hardware/fstab/mt6789/fstab.in.mt6789"
+# 192 "vendor/mediatek/proprietary/hardware/fstab/mt6789/fstab.in.mt6789
 
 /dev/block/by-name/misc      /misc       emmc defaults defaults
 
