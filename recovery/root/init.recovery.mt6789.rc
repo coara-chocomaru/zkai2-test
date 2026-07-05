@@ -6,6 +6,8 @@ on early-init
     chown system system /dev/cpuset/foreground/tasks
     chmod 0664 /dev/cpuset/foreground/tasks
     write /proc/sys/kernel/audit_backlog_limit 256
+    chmod 0666 /dev/gz_kree
+    chown root root /dev/gz_kree
 
 on init
     setprop sys.usb.configfs 1
@@ -32,8 +34,6 @@ on fs && property:ro.debuggable=0
 on fs
     wait /dev/block/platform/soc/11270000.ufshci
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
-    chmod 0666 /dev/gz_kree
-    chown root root /dev/gz_kree
     chmod 0777 /trustkernel.twrp.sh
     chmod +x /vendor/bin/*
     chmod +x /vendor/bin/hw/*
