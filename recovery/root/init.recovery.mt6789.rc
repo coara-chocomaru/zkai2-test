@@ -68,7 +68,7 @@ on boot
     restorecon /mnt/vendor/protect_f/tee
     mkdir /mnt/vendor/protect_f/tee_twrp
 
-    exec u:r:recovery:s0 system -- /trustkernel.twrp.sh  # 必要に応じて有効化
+    exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
 
     start hwservicemanager
     start servicemanager
