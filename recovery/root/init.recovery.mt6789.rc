@@ -199,13 +199,11 @@ service teed /vendor/bin/teed \
     --datapath /mnt/vendor/protect_f/tee_twrp/fs \
     --sptapath /mnt/vendor/protect_f/tee_twrp/app \
     --systapath /vendor/app/t6 \
-    --rpmbdev /dev/mmcblk0rpmb \
     --rpmbdev /dev/rpmb0 \
     --prot /mnt/vendor/protect_f/tee \
     --prebuilt /vendor/app/t6/data \
     --logpath /mnt/vendor/protect_f/tee_twrp/tkcore.log \
     --proprefix vendor.trustkernel
-    capabilities SYS_RAWIO
     user root
     group root
     disabled
