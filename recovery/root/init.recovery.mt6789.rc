@@ -34,6 +34,8 @@ on fs && property:ro.debuggable=0
 on fs
     wait /dev/block/platform/soc/11270000.ufshci
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
+    chmod 0666 /dev/gz_kree
+    chown root root /dev/gz_kree
     chmod +x /vendor/bin/*
     chmod +x /vendor/bin/hw/*
     # */
@@ -52,13 +54,19 @@ on fs
     restorecon_recursive /mnt/vendor/nvdata
     mount ext4 /dev/block/by-name/nvcfg    /mnt/vendor/nvcfg     rw wait
     restorecon_recursive /mnt/vendor/nvcfg
+    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
+    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
 
 on post-fs
-    chmod 0666 /dev/gz_kree
-    chown root root /dev/gz_kree
 
-    start teed
     write /proc/bootprof "tkcore: prepare system ta path"
+    
+    restorecon          /mnt/vendor/protect_f
+    mkdir               /mnt/vendor/protect_f/tee
+    chown system system /mnt/vendor/protect_f/tee
+    restorecon          /mnt/vendor/protect_f/tee
+    
+    start teed
 
 on property:vendor.trustkernel.fs.state=prepare
     write /proc/bootprof "tkcore: prepare basic"
@@ -105,7 +113,6 @@ on boot
     start hwservicemanager
     start servicemanager
 
-    wait /dev/tkcore_admin 10
 
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
