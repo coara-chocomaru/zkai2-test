@@ -49,6 +49,8 @@ on fs
     mount ext4 /dev/block/by-name/nvcfg    /mnt/vendor/nvcfg     rw wait
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
+    resetprop ro.boot.vbmeta.digest 7d3d64ad9a8d4f4af86d9b0114bb96e9d6ae871be1b1c694173dde51ae939dd5
+    resetprop ro.boot.vbmeta.size 10368
 
 on post-fs
     write /proc/bootprof "tkcore: prepare system ta path"
