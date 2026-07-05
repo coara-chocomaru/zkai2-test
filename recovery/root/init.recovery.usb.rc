@@ -146,7 +146,7 @@ on property:sys.usb.ffs.ready=1 && property:sys.usb.config=mtp,adb && property:s
 
 on property:sys.usb.config=mass_storage && property:sys.usb.configfs=1
     setprop sys.usb.pid 0x2002
-    start ums   # 假设有 ums 服务
+    start ums
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "ums"
     write /config/usb_gadget/g1/idVendor ${sys.usb.vid.mtk}
     write /config/usb_gadget/g1/idProduct ${sys.usb.pid}
