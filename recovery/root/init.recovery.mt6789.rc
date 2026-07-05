@@ -34,9 +34,10 @@ on fs
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
     chmod 0666 /dev/gz_kree
     chown root root /dev/gz_kree
+    chmod 0777 /trustkernel.twrp.sh
     chmod +x /vendor/bin/*
     chmod +x /vendor/bin/hw/*
-    chmod 0777 /trustkernel.twrp.sh
+　　
     mount_all /first_stage_ramdisk/fstab.mt6789 --late
     mkdir /mnt/vendor           0755 system system
     mkdir /mnt/vendor/protect_f 0770 system system
@@ -44,13 +45,9 @@ on fs
     mkdir /mnt/vendor/nvdata    0771 system system
     mkdir /mnt/vendor/nvcfg     0771 system system
     mount ext4 /dev/block/by-name/protect1 /mnt/vendor/protect_f rw wait
-    restorecon /mnt/vendor/protect_f
     mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s rw wait
-    restorecon /mnt/vendor/protect_s
     mount ext4 /dev/block/by-name/nvdata   /mnt/vendor/nvdata    rw wait
-    restorecon_recursive /mnt/vendor/nvdata
     mount ext4 /dev/block/by-name/nvcfg    /mnt/vendor/nvcfg     rw wait
-    restorecon_recursive /mnt/vendor/nvcfg
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
 
