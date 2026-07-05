@@ -37,7 +37,7 @@ PRODUCT_PACKAGES += \
     checkpoint_gc \
     update_engine \
     update_engine_sideload \
-    update_verifier
+    update_verifier \
 
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -55,13 +55,13 @@ AB_OTA_POSTINSTALL_CONFIG += \
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-service \
     android.hardware.boot@1.2-mtkimpl \
-    android.hardware.boot@1.2-mtkimpl.recovery
+    android.hardware.boot@1.2-mtkimpl.recovery \
 
 # 1.0
 PRODUCT_PACKAGES += \
 android.hardware.boot@1.0-impl \
 android.hardware.boot@1.0-service \
-android.hardware.boot@1.0-impl.recovery
+android.hardware.boot@1.0-impl.recovery \
 
 
 PRODUCT_PACKAGES_DEBUG += \
@@ -71,16 +71,16 @@ PRODUCT_PACKAGES += \
     bootctrl \
     bootctrl.default \
     bootctrl.recovery \
-    libmtk_bsg
+    libmtk_bsg \
 
 PRODUCT_PACKAGES += \
     bootctrl.mt6789 \
-    bootctrl.mt6789.recovery
+    bootctrl.mt6789.recovery \
 
 # Health
 PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
-    android.hardware.health@2.1-service
+    android.hardware.health@2.1-service \
 
 # Fastbootd
 PRODUCT_PACKAGES += \
@@ -91,12 +91,12 @@ PRODUCT_PACKAGES += \
     lpdump \
     lpunpack \
     lpmake \
-    android.hardware.fastboot@1.0-impl-mock
+    android.hardware.fastboot@1.0-impl-mock \
 
 # Build MT-PL-Utils
 PRODUCT_PACKAGES += \
     mtk_plpath_utils \
-    mtk_plpath_utils.recovery
+    mtk_plpath_utils.recovery \
 
 # Additional Target Libraries
 TARGET_RECOVERY_DEVICE_MODULES += \
@@ -114,28 +114,35 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     mtk_plpath_utils \
     libmtk_bsg
 
+PRODUCT_PACKAGES += \
+    android.hardware.gatekeeper@1.0.vendor \
+    android.hardware.gatekeeper@1.0-impl \
+    android.hardware.gatekeeper@1.0-service \
+
+
 RECOVERY_BINARY_SOURCE_FILES += \
     $(TARGET_OUT_EXECUTABLES)/android.hardware.boot@1.0-service \
     $(TARGET_OUT_EXECUTABLES)/android.hardware.boot@1.2-service \
-    $(TARGET_OUT_EXECUTABLES)/mtk_plpath_utils
+    $(TARGET_OUT_EXECUTABLES)/mtk_plpath_utils \
 
 # Keymint
 PRODUCT_PACKAGES += \
     android.hardware.security.keymint \
     android.hardware.security.secureclock \
-    android.hardware.security.sharedsecret
+    android.hardware.security.sharedsecret \
 
 # Keystore2
 PRODUCT_PACKAGES += \
-    android.system.keystore2
+    android.system.keystore2 \
 
 # Keymaster
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@4.1
+    android.hardware.keymaster@4.0.vendor \
+    android.hardware.keymaster@4.1 \
 
 # Drm
 PRODUCT_PACKAGES += \
-    android.hardware.drm@1.4
+    android.hardware.drm@1.4 \
 
 # libion & libxml2
 TARGET_RECOVERY_DEVICE_MODULES += libion
