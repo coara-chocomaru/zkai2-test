@@ -183,7 +183,6 @@ service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-ser
     user root
     group root
     disabled
-    seclabel u:r:recovery:s0
 
 service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
     class early_hal
@@ -192,7 +191,6 @@ service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keym
     user root
     group root
     disabled
-    seclabel u:r:recovery:s0
 
 service teed /vendor/bin/teed \
     --tzdev /dev/tkcore_admin \
@@ -207,4 +205,3 @@ service teed /vendor/bin/teed \
     user root
     group root
     disabled
-    seclabel u:r:recovery:s0
