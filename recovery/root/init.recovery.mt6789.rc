@@ -37,7 +37,7 @@ on fs
     chmod 0777 /trustkernel.twrp.sh
     chmod +x /vendor/bin/*
     chmod +x /vendor/bin/hw/*
-　　
+    exec_start wait_for_keymaster
     mount_all /first_stage_ramdisk/fstab.mt6789 --late
     mkdir /mnt/vendor           0755 system system
     mkdir /mnt/vendor/protect_f 0770 system system
