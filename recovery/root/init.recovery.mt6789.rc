@@ -12,9 +12,7 @@ on init
     setprop sys.usb.controller "musb-hdrc"
     setprop sys.usb.ffs.aio_compat 0
     export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw
-
     symlink /sys/devices/platform/soc/10026000.pwrap/10026000.pwrap:mt6366/mt6358-gauge /dev/gauge
-
     chmod 0660 /dev/alarm
     chown root system /dev/alarm
     chmod -R 0777 /kmodule
@@ -38,7 +36,6 @@ on fs
     chown root root /dev/gz_kree
     chmod +x /vendor/bin/*
     chmod +x /vendor/bin/hw/*
-    # */
     chmod 0777 /trustkernel.twrp.sh
     mount_all /first_stage_ramdisk/fstab.mt6789 --late
     mkdir /mnt/vendor           0755 system system
@@ -58,14 +55,11 @@ on fs
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
 
 on post-fs
-
     write /proc/bootprof "tkcore: prepare system ta path"
-    
     restorecon          /mnt/vendor/protect_f
     mkdir               /mnt/vendor/protect_f/tee
     chown system system /mnt/vendor/protect_f/tee
     restorecon          /mnt/vendor/protect_f/tee
-    
     start teed
 
 on property:vendor.trustkernel.fs.state=prepare
@@ -73,17 +67,14 @@ on property:vendor.trustkernel.fs.state=prepare
     mkdir /data/vendor/t6 0771 system system
     chown system system /data/vendor/t6
     restorecon /data/vendor/t6
-
     write /proc/bootprof "tkcore: prepare sfs"
     mkdir /data/vendor/t6/fs 0771 system system
     chown system system /data/vendor/t6/fs
     restorecon /data/vendor/t6/fs
-
     write /proc/bootprof "tkcore: prepare service provider ta path"
     mkdir /data/vendor/t6/app 0771 system system
     chown system system /data/vendor/t6/app
     restorecon /data/vendor/t6/app
-
     setprop vendor.trustkernel.fs.state ready
 
 on property:ro.crypto.state=unencrypted
@@ -107,13 +98,29 @@ on property:vendor.trustkernel.ready=true && property:vendor.trustkernel.fs.stat
     write /proc/bootprof "tkcore: start tee_check_keybox"
     start tee_check_keybox
 
+on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
+    write /proc/bootprof "crypto: install_keyring (crypto.ready=1)"
+    install_keyring
+    setprop crypto.ready 1
+
+on property:crypto.ready=1
+    write /proc/bootprof "crypto: start vendor.keymint"
+    start vendor.keymint
+    start vendor.boot-hal-1-2
+
+on property:vendor.sys.listener.registered=true
+    start vendor.gatekeeper
+    start vendor.keymint
+
+on property:hwservicemanager.ready=true
+    start vendor.gatekeeper
+    start vendor.keymint
+
 on boot
     start mtk.plpath.utils.link
     exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
     start hwservicemanager
     start servicemanager
-
-
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
     symlink /dev/block/by-name/lk1 /dev/block/by-name/bootloader1
@@ -125,35 +132,25 @@ on post-fs-data
     mkdir /data/vendor/hardware 0771 root root
     start health-hal-2-1
 
-on property:hwservicemanager.ready=true
-    start vendor.gatekeeper-1-0
-    start vendor.keymint-trustkernel
-
-on property:vendor.trustkernel.ready=1
-    setprop crypto.ready 1
-
-on property:crypto.ready=1
-    start vendor.boot-hal-1-2
-
 on property:ro.crypto.state=unsupported
     stop teed
-    stop vendor.gatekeeper-1-0
-    stop vendor.keymint-trustkernel
+    stop vendor.gatekeeper
+    stop vendor.keymint
 
 on property:ro.crypto.state=unencrypted
     stop teed
-    stop vendor.gatekeeper-1-0
-    stop vendor.keymint-trustkernel
+    stop vendor.gatekeeper
+    stop vendor.keymint
 
 on property:twrp.decrypt.done=true
     stop teed
-    stop vendor.gatekeeper-1-0
-    stop vendor.keymint-trustkernel
+    stop vendor.gatekeeper
+    stop vendor.keymint
 
 on property:crypto.ready=0
     stop teed
-    stop vendor.gatekeeper-1-0
-    stop vendor.keymint-trustkernel
+    stop vendor.gatekeeper
+    stop vendor.keymint
 
 on property:persist.vendor.mtk.pl_lnk=1
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
@@ -201,19 +198,34 @@ service servicemanager /system/bin/servicemanager
     disabled
     seclabel u:r:recovery:s0
 
-service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
-    interface android.hardware.gatekeeper@1.0::IGatekeeper default
-    user root
-    group root
-    disabled
-
-service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
+service system_suspend /system/bin/hw/android.system.suspend-service
     class early_hal
-    interface android.hardware.keymaster@4.0::IKeymasterDevice default
-    interface android.hardware.keymaster@4.1::IKeymasterDevice default
+    interface aidl android.system.suspend.ISystemSuspend/default
     user root
-    group root
+    group root wakelock
+    capabilities BLOCK_SUSPEND
     disabled
+    seclabel u:r:recovery:s0
+
+service vendor.gatekeeper /vendor/bin/hw/android.hardware.gatekeeper-service.trustkernel
+    class hal
+    interface aidl android.hardware.gatekeeper.IGatekeeper/default
+    user system
+    group system
+    disabled
+    seclabel u:r:recovery:s0
+
+service vendor.keymint /vendor/bin/hw/android.hardware.security.keymint@3.0-service.trustkernel
+    class early_hal
+    interface aidl android.hardware.security.keymint.IKeyMintDevice/default
+    interface aidl android.hardware.security.keymint.IRemotelyProvisionedComponent/default
+    interface aidl android.hardware.security.sharedsecret.ISharedSecret/default
+    interface aidl android.hardware.security.secureclock.ISecureClock/default
+    user system
+    group system drmrpc
+    disabled
+    oneshot
+    seclabel u:r:recovery:s0
 
 service teed /vendor/bin/teed \
     --tzdev     /dev/tkcore_admin \
