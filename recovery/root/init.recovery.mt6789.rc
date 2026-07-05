@@ -192,6 +192,9 @@ service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keym
     group root
     disabled
 
+on property:vendor.trustkernel.ready=true && property:vendor.trustkernel.fs.state=ready
+       start tee_check_keybox
+
 service teed /vendor/bin/teed \
     --tzdev /dev/tkcore_admin \
     --datapath /mnt/vendor/protect_f/tee_twrp/fs \
@@ -202,6 +205,15 @@ service teed /vendor/bin/teed \
     --prebuilt /vendor/app/t6/data \
     --logpath /mnt/vendor/protect_f/tee_twrp/tkcore.log \
     --proprefix vendor.trustkernel
+    capabilities SYS_RAWIO
     user root
     group root
     disabled
+    class core
+
+service tee_check_keybox /vendor/bin/tee_check_keybox
+       user system
+       group system
+       class main
+       disabled
+       oneshot
