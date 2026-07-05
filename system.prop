@@ -28,3 +28,4 @@ ro.bootimage.build.version.incremental=10624665
 ro.bootimage.build.version.release=12
 ro.bootimage.build.version.release_or_codename=12
 ro.bootimage.build.version.sdk=31
+keystore.boot_level=1000000000
