@@ -25,6 +25,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.product.board=mgvi_64_armv82 \
     ro.product.device=Zkai-study-Tab
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    PRIVATE_BUILD_DESC="hal_mgvi_64_armv82-user 12 SP1A.210812.016 1rck61v164bspP28 dev-keys"
+    PRIVATE_BUILD_DESC="sys_mssi_64_ww_armv82-user 13 TP1A.220624.014 p1rck6985v164P34 release-keys"
 
-BUILD_FINGERPRINT := ZMOOTH/Zkai-study-Tab/Zkai-study-Tab:12/SP1A.210812.016/1722332548:user/dev-keys
+BUILD_FINGERPRINT := ZMOOTH/Zkai-study-Tab/Zkai-study-Tab:13/TP1A.220624.014/1765335632:user/release-keys
