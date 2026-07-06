@@ -1,4 +1,4 @@
-import /vendor/etc/init/vendor.mediatek.hardware.keymaster_attestation@1.1-service.rc
+# import /vendor/etc/init/vendor.mediatek.hardware.keymaster_attestation@1.1-service.rc
 
 on early-init
     mount cgroup none /dev/cpuset cpuset
@@ -119,23 +119,21 @@ on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
     setprop crypto.ready 1
 
 on property:crypto.ready=1
-    write /proc/bootprof "crypto: start vendor.keymint"
-    start vendor.keymint-trustkernel
+    # start vendor.keymint-trustkernel
     start vendor.boot-hal-1-2
 
 on property:vendor.sys.listener.registered=true
-    start vendor.keymint-trustkernel
-    start keymaster_attestation-1-1
+    # start vendor.keymint-trustkernel
+    # start keymaster_attestation-1-1
     start vendor.gatekeeper-1-0
 
 on property:hwservicemanager.ready=true
-    start vendor.keymint-trustkernel
-    start keymaster_attestation-1-1
+    # start vendor.keymint-trustkernel
+    # start keymaster_attestation-1-1
     start vendor.gatekeeper-1-0
 
 on boot
     start mtk.plpath.utils.link
-    exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
     start hwservicemanager
     start servicemanager
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
@@ -151,26 +149,26 @@ on post-fs-data
 
 on property:ro.crypto.state=unsupported
     stop teed
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
+    # stop vendor.keymint-trustkernel
+    # stop keymaster_attestation-1-1
     stop vendor.gatekeeper-1-0
 
 on property:ro.crypto.state=unencrypted
     stop teed
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
+    # stop vendor.keymint-trustkernel
+    # stop keymaster_attestation-1-1
     stop vendor.gatekeeper-1-0
 
 on property:twrp.decrypt.done=true
     stop teed
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
+    # stop vendor.keymint-trustkernel
+    # stop keymaster_attestation-1-1
     stop vendor.gatekeeper-1-0
 
 on property:crypto.ready=0
     stop teed
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
+    # stop vendor.keymint-trustkernel
+    # stop keymaster_attestation-1-1
     stop vendor.gatekeeper-1-0
 
 on property:persist.vendor.mtk.pl_lnk=1
@@ -227,12 +225,12 @@ service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-ser
     disabled
     seclabel u:r:recovery:s0
 
-service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
-    class early_hal
-    interface android.hardware.keymaster@4.0::IKeymasterDevice default
-    interface android.hardware.keymaster@4.1::IKeymasterDevice default
-    user nobody
-    seclabel u:r:recovery:s0
+# service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
+#    class early_hal
+#    interface android.hardware.keymaster@4.0::IKeymasterDevice default
+#    interface android.hardware.keymaster@4.1::IKeymasterDevice default
+#    user nobody
+#   seclabel u:r:recovery:s0
 
 
 # service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
