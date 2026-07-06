@@ -119,7 +119,6 @@ TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot@1.1.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot@1.2.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@4.1.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@3.0.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libmtk_bsg.so
 
