@@ -109,7 +109,6 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     android.hardware.boot@1.1 \
     android.hardware.boot@1.2 \
     android.hardware.keymaster@4.1 \
-    android.hardware.keymaster@3.0 \
     libion \
     mtk_plpath_utils \
     libmtk_bsg
