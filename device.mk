@@ -109,6 +109,7 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     android.hardware.boot@1.1 \
     android.hardware.boot@1.2 \
     android.hardware.keymaster@4.1 \
+    android.system.keystore2-V1-ndk_platform \
     libion \
     mtk_plpath_utils \
     libmtk_bsg \
@@ -127,13 +128,11 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     liblog \
     libhardware \
     libbase \
-    libkeymint_support \
-    libtrustkernel_keymint
+    libkeymint_support
 
 RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libion.so
 RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libkeystore2.so
 RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4support.so
-RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)/libtrustkernel_keymint.so
 
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0.vendor \
