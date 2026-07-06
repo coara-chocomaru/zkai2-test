@@ -117,6 +117,8 @@ on property:vendor.sys.listener.registered=true
     # start vendor.keymint-trustkernel
     # start keymaster_attestation-1-1
     # start vendor.gatekeeper-1-0
+    start keymaster_attestation-1-1
+    start keystore2
 
 on property:hwservicemanager.ready=true
     # start vendor.keymint-trustkernel
