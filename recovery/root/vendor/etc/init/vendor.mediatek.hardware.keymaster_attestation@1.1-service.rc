@@ -5,3 +5,4 @@ service keymaster_attestation-1-1 /vendor/bin/hw/vendor.mediatek.hardware.keymas
     user system
     group system
     disabled
+    seclabel u:r:recovery:s0
