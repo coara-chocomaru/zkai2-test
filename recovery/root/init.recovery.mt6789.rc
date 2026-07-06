@@ -110,22 +110,20 @@ on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
     setprop crypto.ready 1
 
 on property:crypto.ready=1
-    # start vendor.keymint-trustkernel
-    start vendor.boot-hal-1-2
+    start vendor.keymint-trustkernel
+    # start vendor.boot-hal-1-2
 
 on property:vendor.sys.listener.registered=true
-    # start vendor.keymint-trustkernel
-    # start keymaster_attestation-1-1
-    # start vendor.gatekeeper-1-0
+    start teed
+    start vendor.gatekeeper-1-0
+    start vendor.keymint-trustkernel
     start keymaster_attestation-1-1
-    start keystore2
 
 on property:hwservicemanager.ready=true
-    # start vendor.keymint-trustkernel
-    # start keymaster_attestation-1-1
-    # start vendor.gatekeeper-1-0
+    start teed
+    start vendor.gatekeeper-1-0
+    start vendor.keymint-trustkernel
     start keymaster_attestation-1-1
-    start keystore2
 
 on boot
     start mtk.plpath.utils.link
@@ -145,9 +143,9 @@ on post-fs-data
 
 on property:ro.crypto.state=unsupported
     stop teed
-    # stop vendor.keymint-trustkernel
+    stop vendor.keymint-trustkernel
     stop keymaster_attestation-1-1
-    # stop vendor.gatekeeper-1-0
+    stop vendor.gatekeeper-1-0
 
 on property:ro.crypto.state=unencrypted
     stop teed
@@ -157,15 +155,15 @@ on property:ro.crypto.state=unencrypted
 
 on property:twrp.decrypt.done=true
     stop teed
-    # stop vendor.keymint-trustkernel
+    stop vendor.keymint-trustkernel
     stop keymaster_attestation-1-1
-    # stop vendor.gatekeeper-1-0
+    stop vendor.gatekeeper-1-0
 
 on property:crypto.ready=0
     stop teed
-    # stop vendor.keymint-trustkernel
+    stop vendor.keymint-trustkernel
     stop keymaster_attestation-1-1
-    # stop vendor.gatekeeper-1-0
+    stop vendor.gatekeeper-1-0
 
 on property:persist.vendor.mtk.pl_lnk=1
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
@@ -213,27 +211,20 @@ service servicemanager /system/bin/servicemanager
     disabled
     seclabel u:r:recovery:s0
 
-# service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
-#    interface android.hardware.gatekeeper@1.0::IGatekeeper default
-#    class hal
-#    user system
-#    group system
-#    disabled
-#    seclabel u:r:recovery:s0
+service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+    interface android.hardware.gatekeeper@1.0::IGatekeeper default
+    class hal
+    user system
+    group system
+    disabled
+    seclabel u:r:recovery:s0
 
-# service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
-#    class early_hal
-#    interface android.hardware.keymaster@4.0::IKeymasterDevice default
-#    interface android.hardware.keymaster@4.1::IKeymasterDevice default
-#    user nobody
-#   seclabel u:r:recovery:s0
-
-
-# service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
-#    class early_hal
-#    user system
-#    group system
-#   seclabel u:r:recovery:s0
+service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
+    class early_hal
+    interface android.hardware.keymaster@4.0::IKeymasterDevice default
+    interface android.hardware.keymaster@4.1::IKeymasterDevice default
+    user nobody
+    seclabel u:r:recovery:s0
 
 service keymaster_attestation-1-1 /vendor/bin/hw/vendor.mediatek.hardware.keymaster_attestation@1.1-service
     interface vendor.mediatek.hardware.keymaster_attestation@1.0::IKeymasterDevice default
