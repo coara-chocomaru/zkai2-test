@@ -111,7 +111,29 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     android.hardware.keymaster@4.1 \
     libion \
     mtk_plpath_utils \
-    libmtk_bsg
+    libmtk_bsg \
+    keystore2 \
+    libkeystore2 \
+    libkeymaster4support \
+    libkeymaster4_1support \
+    libkeymaster4 \
+    libkeymaster4_1 \
+    libhidltransport \
+    libhwbinder \
+    libbinder \
+    libbinder_ndk \
+    libutils \
+    libcutils \
+    liblog \
+    libhardware \
+    libbase \
+    libkeymint_support \
+    libtrustkernel_keymint
+
+RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libion.so
+RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libkeystore2.so
+RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4support.so
+RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)/libtrustkernel_keymint.so
 
 PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0.vendor \
@@ -142,11 +164,6 @@ PRODUCT_PACKAGES += \
 # Drm
 PRODUCT_PACKAGES += \
     android.hardware.drm@1.4 \
-
-# libion & libxml2
-TARGET_RECOVERY_DEVICE_MODULES += libion
-
-RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libion.so
 
 # Hide Reflash TWRP
 PRODUCT_PROPERTY_OVERRIDES += ro.twrp.vendor_boot=true
