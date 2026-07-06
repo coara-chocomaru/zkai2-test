@@ -149,9 +149,9 @@ on property:ro.crypto.state=unsupported
 
 on property:ro.crypto.state=unencrypted
     stop teed
-    # stop vendor.keymint-trustkernel
+    stop vendor.keymint-trustkernel
     stop keymaster_attestation-1-1
-    # stop vendor.gatekeeper-1-0
+    stop vendor.gatekeeper-1-0
 
 on property:twrp.decrypt.done=true
     stop teed
