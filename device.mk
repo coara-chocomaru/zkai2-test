@@ -98,8 +98,66 @@ PRODUCT_PACKAGES += \
     mtk_plpath_utils \
     mtk_plpath_utils.recovery \
 
-# Additional Target Libraries
+
 TARGET_RECOVERY_DEVICE_MODULES += \
+    keystore2 \
+    libkeystore2 \
+    libkeystore2_aaid \
+    libkeystore2_apc_compat \
+    libkeystore2_crypto \
+    libkeystore2_flags \
+    libkeystore2_hal_names \
+    libkeystore2_km_compat \
+    libkeystore2_selinux \
+    libbinder \
+    libbinder_ndk \
+    libbinder_rs \
+    libhwbinder \
+    libhidltransport \
+    libhidlbase \
+    android.hardware.security.keymint \
+    android.hardware.security.secureclock \
+    android.hardware.security.sharedsecret \
+    libkeymint_support \
+    libkeymaster4 \
+    libkeymaster4_1 \
+    libkeymaster4support \
+    libkeymaster4_1support \
+    libtrustkernel_keymint \
+    libtrustkernel_tee \
+    libtee_client \
+    libtz_shared \
+    libbase \
+    libcutils \
+    libutils \
+    liblog \
+    libhardware \
+    libcrypto \
+    libssl \
+    libanyhow \
+    libserde \
+    libserde_cbor \
+    libthiserror \
+    libtokio \
+    librand \
+    libhex \
+    libder \
+    libsqlite3 \
+    librusqlite \
+    android.hardware.security.rkp-V3-rust \
+    android.hardware.security.secureclock-V1-rust \
+    android.hardware.security.sharedsecret-V1-rust \
+    android.os.permissions_aidl-rust \
+    android.security.apc-rust \
+    android.security.authorization-rust \
+    android.security.compat-rust \
+    android.security.maintenance-rust \
+    android.security.metrics-rust \
+    android.security.rkp_aidl-rust \
+    apex_aidl_interface-rust \
+    librkpd_client \
+    libpostprocessor_client \
+    libwatchdog_rs \
     android.hardware.boot@1.0-impl \
     android.hardware.boot@1.0-service \
     android.hardware.boot@1.0-impl.recovery \
@@ -113,8 +171,6 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     libion \
     mtk_plpath_utils \
     libmtk_bsg \
-    keystore2 \
-    libkeystore2 \
     libkeymaster4support \
     libkeymaster4_1support \
     libkeymaster4 \
