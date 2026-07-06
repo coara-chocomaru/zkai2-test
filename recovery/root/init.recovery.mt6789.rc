@@ -1,5 +1,3 @@
-import /vendor/etc/init/vendor.mediatek.hardware.keymaster_attestation@1.1-service.rc
-
 on early-init
     mount cgroup none /dev/cpuset cpuset
     mkdir /dev/cpuset/foreground
@@ -145,25 +143,25 @@ on post-fs-data
 on property:ro.crypto.state=unsupported
     stop teed
     # stop vendor.keymint-trustkernel
-    # stop keymaster_attestation-1-1
+    stop keymaster_attestation-1-1
     # stop vendor.gatekeeper-1-0
 
 on property:ro.crypto.state=unencrypted
     stop teed
     # stop vendor.keymint-trustkernel
-    # stop keymaster_attestation-1-1
+    stop keymaster_attestation-1-1
     # stop vendor.gatekeeper-1-0
 
 on property:twrp.decrypt.done=true
     stop teed
     # stop vendor.keymint-trustkernel
-    # stop keymaster_attestation-1-1
+    stop keymaster_attestation-1-1
     # stop vendor.gatekeeper-1-0
 
 on property:crypto.ready=0
     stop teed
     # stop vendor.keymint-trustkernel
-    # stop keymaster_attestation-1-1
+    stop keymaster_attestation-1-1
     # stop vendor.gatekeeper-1-0
 
 on property:persist.vendor.mtk.pl_lnk=1
@@ -233,6 +231,15 @@ service servicemanager /system/bin/servicemanager
 #    user system
 #    group system
 #   seclabel u:r:recovery:s0
+
+service keymaster_attestation-1-1 /vendor/bin/hw/vendor.mediatek.hardware.keymaster_attestation@1.1-service
+    interface vendor.mediatek.hardware.keymaster_attestation@1.0::IKeymasterDevice default
+    interface vendor.mediatek.hardware.keymaster_attestation@1.1::IKeymasterDevice default
+    class hal
+    user system
+    group system
+    disabled
+    seclabel u:r:recovery:s0
 
 service teed /vendor/bin/teed \
     --tzdev /dev/tkcore_admin \
