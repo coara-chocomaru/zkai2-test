@@ -1,4 +1,4 @@
-# import /vendor/etc/init/vendor.mediatek.hardware.keymaster_attestation@1.1-service.rc
+import /vendor/etc/init/vendor.mediatek.hardware.keymaster_attestation@1.1-service.rc
 
 on early-init
     mount cgroup none /dev/cpuset cpuset
@@ -124,8 +124,7 @@ on property:hwservicemanager.ready=true
     # start vendor.keymint-trustkernel
     # start keymaster_attestation-1-1
     # start vendor.gatekeeper-1-0
-    start vendor.keymaster-4-0
-    start vendor.keymaster-4-1
+    start keymaster_attestation-1-1
     start keystore2
 
 on boot
