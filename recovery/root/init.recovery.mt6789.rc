@@ -57,8 +57,6 @@ on fs
     exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
     symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
-    resetprop ro.boot.vbmeta.digest 7d3d64ad9a8d4f4af86d9b0114bb96e9d6ae871be1b1c694173dde51ae939dd5
-    resetprop ro.boot.vbmeta.size 10368
 
 on post-fs
     write /proc/bootprof "tkcore: prepare system ta path"
@@ -66,6 +64,7 @@ on post-fs
     mkdir /mnt/vendor/protect_f/tee_twrp
     chown system system /mnt/vendor/protect_f/tee_twrp
     restorecon /mnt/vendor/protect_f/tee_twrp
+    start boot-hal-1-2
     start teed
 
 on property:vendor.trustkernel.fs.state=prepare
@@ -139,6 +138,7 @@ on post-fs-data
     mkdir /data/vendor_de/0 0770 system system
     mkdir /data/vendor_de/0/cryptoeng 0770 system system
     mkdir /data/vendor/hardware 0771 root root
+    mkdir /data/vendor/key_provisioning 0771 system system
     start health-hal-2-1
 
 on property:ro.crypto.state=unsupported
