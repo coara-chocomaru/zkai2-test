@@ -1,3 +1,5 @@
+import /vendor/etc/init/vendor.mediatek.hardware.keymaster_attestation@1.1-service.rc
+
 on early-init
     mount cgroup none /dev/cpuset cpuset
     mkdir /dev/cpuset/foreground
