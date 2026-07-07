@@ -204,7 +204,7 @@ TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 
 # VINTF
 DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/recovery/root/vendor/etc/vintf/manifest.xml
-DEVICE_MATRIX_FILE += $(DEVICE_PATH)/recovery/root/system/etc/vintf/compatibility_matrix.device.xml
+# DEVICE_MATRIX_FILE += $(DEVICE_PATH)/recovery/root/system/etc/vintf/compatibility_matrix.device.xml
 
 TARGET_SCREEN_DENSITY := 240
 BOARD_USE_FRAMEBUFFER_ALPHA_CHANNEL := true
