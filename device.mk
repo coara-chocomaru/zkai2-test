@@ -2,11 +2,10 @@ LOCAL_PATH := device/gsl/ztab020
 
 # API
 PRODUCT_SHIPPING_API_LEVEL := 31
-PRODUCT_TARGET_VNDK_VERSION := 33
+PRODUCT_TARGET_VNDK_VERSION := 32
 PRODUCT_EXTRA_VNDK_VERSIONS := \
     31 \
-    32 \
-    33
+    32
 PRODUCT_FULL_TREBLE_OVERRIDE := true
 PRODUCT_TREBLE_LINKER_NAMESPACES := true
 PRODUCT_CHARACTERISTICS := tablet
@@ -99,33 +98,6 @@ PRODUCT_PACKAGES += \
     mtk_plpath_utils.recovery
 
 TARGET_RECOVERY_DEVICE_MODULES += \
-    keystore2 \
-    libkeystore2 \
-    libkeystore2_aaid \
-    libkeystore2_apc_compat \
-    libkeystore2_crypto \
-    libkeystore2_flags \
-    libkeystore2_hal_names \
-    libkeystore2_km_compat \
-    libkeystore2_selinux \
-    libbinder \
-    libbinder_ndk \
-    libbinder_rs \
-    libhwbinder \
-    libhidltransport \
-    libhidlbase \
-    libkeymaster4 \
-    libkeymaster4_1 \
-    libkeymaster4support \
-    libkeymaster4_1support \
-    libkeymint_support \
-    libbase \
-    libcutils \
-    libutils \
-    liblog \
-    libhardware \
-    libcrypto \
-    libssl \
     libion \
     mtk_plpath_utils \
     libmtk_bsg \
@@ -137,27 +109,25 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     android.hardware.boot@1.0 \
     android.hardware.boot@1.1 \
     android.hardware.boot@1.2 \
-    android.system.keystore2-V1-ndk_platform \
-    android.hardware.keymaster@4.1
 
 RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libion.so
 RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libkeystore2.so
 RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4support.so
 
-PRODUCT_PACKAGES += \
+# PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0.vendor \
     android.hardware.gatekeeper@1.0-impl \
     android.hardware.gatekeeper@1.0-service
 
-PRODUCT_PACKAGES += \
+# PRODUCT_PACKAGES += \
      android.hardware.security.keymint \
      android.hardware.security.secureclock \
      android.hardware.security.sharedsecret
 
-PRODUCT_PACKAGES += \
+# PRODUCT_PACKAGES += \
      android.system.keystore2
 
-PRODUCT_PACKAGES += \
+# PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.0.vendor \
     android.hardware.keymaster@4.1
 # Drm
