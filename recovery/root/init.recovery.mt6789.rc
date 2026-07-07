@@ -24,105 +24,13 @@ on init
 on property:kmodule=1
     exec u:r:recovery:s0 -- /load_kmodules.sh
 
-on early-fs
-    start vold
-
 on fs && property:ro.debuggable=0
     write /sys/class/udc/musb-hdrc/device/cmode 2
     start adbd
 
-service keystore2 /system/bin/keystore2 /tmp/misc/keystore
-    user root
-    group root drmrpc readproc
-    disabled
-    seclabel u:r:recovery:s0
-
 on fs
     wait /dev/block/platform/soc/11270000.ufshci
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
-    chmod 0777 /trustkernel.twrp.sh
-    chmod +x /vendor/bin/*
-    chmod +x /vendor/bin/hw/*
-    mount_all /first_stage_ramdisk/fstab.mt6789 --late
-    mkdir /mnt/vendor           0755 system system
-    mkdir /mnt/vendor/protect_f 0770 system system
-    mkdir /mnt/vendor/protect_s 0770 system system
-    mkdir /mnt/vendor/nvdata    0771 system system
-    mkdir /mnt/vendor/nvcfg     0771 system system
-    mount ext4 /dev/block/by-name/protect1 /mnt/vendor/protect_f rw wait
-    mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s rw wait
-    mount ext4 /dev/block/by-name/nvdata   /mnt/vendor/nvdata    rw wait
-    mount ext4 /dev/block/by-name/nvcfg    /mnt/vendor/nvcfg     rw wait
-    mkdir /mnt/vendor/protect_f/tee_twrp 0755 system system
-    exec u:r:recovery:s0 system -- /trustkernel.twrp.sh
-    symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
-    symlink /dev/block/mapper/pl_b /dev/block/by-name/preloader_raw_b
-
-on post-fs
-    write /proc/bootprof "tkcore: prepare system ta path"
-    restorecon /mnt/vendor/protect_f
-    mkdir /mnt/vendor/protect_f/tee_twrp
-    chown system system /mnt/vendor/protect_f/tee_twrp
-    restorecon /mnt/vendor/protect_f/tee_twrp
-    start boot-hal-1-2
-    start teed
-
-on property:vendor.trustkernel.fs.state=prepare
-    write /proc/bootprof "tkcore: prepare basic"
-    mkdir /data/vendor/t6 0771 system system
-    chown system system /data/vendor/t6
-    restorecon /data/vendor/t6
-    write /proc/bootprof "tkcore: prepare sfs"
-    mkdir /data/vendor/t6/fs 0771 system system
-    chown system system /data/vendor/t6/fs
-    restorecon /data/vendor/t6/fs
-    write /proc/bootprof "tkcore: prepare service provider ta path"
-    mkdir /data/vendor/t6/app 0771 system system
-    chown system system /data/vendor/t6/app
-    restorecon /data/vendor/t6/app
-    setprop vendor.trustkernel.fs.state ready
-
-on property:ro.crypto.state=unencrypted
-    setprop vendor.trustkernel.fs.mode 1
-    setprop vendor.trustkernel.fs.state prepare
-
-on property:vold.decrypt=trigger_restart_framework
-    setprop vendor.trustkernel.fs.mode 2
-    setprop vendor.trustkernel.fs.state prepare
-
-on property:ro.crypto.type=file && property:ro.crypto.state=encrypted
-    setprop vendor.trustkernel.fs.mode 3
-    setprop vendor.trustkernel.fs.state prepare
-
-on property:vendor.trustkernel.log.state=ready
-    write /proc/bootprof "tkcore: prepare log file"
-    restorecon /data/vendor/t6/tkcore.log
-    setprop vendor.trustkernel.log.state enable
-
-on property:vendor.trustkernel.ready=true && property:vendor.trustkernel.fs.state=ready
-    write /proc/bootprof "tkcore: start tee_check_keybox"
-    start tee_check_keybox
-
-on property:ro.crypto.state=encrypted && property:ro.crypto.type=file
-    write /proc/bootprof "crypto: install_keyring (crypto.ready=1)"
-    install_keyring
-    setprop crypto.ready 1
-
-on property:crypto.ready=1
-    start vendor.keymint-trustkernel
-    # start vendor.boot-hal-1-2
-
-on property:vendor.sys.listener.registered=true
-    start teed
-    start vendor.gatekeeper-1-0
-    start vendor.keymint-trustkernel
-    start keymaster_attestation-1-1
-
-on property:hwservicemanager.ready=true
-    start teed
-    start vendor.gatekeeper-1-0
-    start vendor.keymint-trustkernel
-    start keymaster_attestation-1-1
 
 on boot
     start mtk.plpath.utils.link
@@ -134,36 +42,7 @@ on boot
     symlink /dev/block/by-name/lk2 /dev/block/by-name/bootloader2
 
 on post-fs-data
-    mkdir /data/vendor_de 0770 system system
-    mkdir /data/vendor_de/0 0770 system system
-    mkdir /data/vendor_de/0/cryptoeng 0770 system system
-    mkdir /data/vendor/hardware 0771 root root
-    mkdir /data/vendor/key_provisioning 0771 system system
     start health-hal-2-1
-
-on property:ro.crypto.state=unsupported
-    stop teed
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
-    stop vendor.gatekeeper-1-0
-
-on property:ro.crypto.state=unencrypted
-    stop teed
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
-    stop vendor.gatekeeper-1-0
-
-on property:twrp.decrypt.done=true
-    stop teed
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
-    stop vendor.gatekeeper-1-0
-
-on property:crypto.ready=0
-    stop teed
-    stop vendor.keymint-trustkernel
-    stop keymaster_attestation-1-1
-    stop vendor.gatekeeper-1-0
 
 on property:persist.vendor.mtk.pl_lnk=1
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
@@ -222,8 +101,6 @@ service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-ser
 service vendor.keymint-trustkernel /vendor/bin/hw/android.hardware.security.keymint-service.trustkernel
     class early_hal
     user nobody
-    interface aidl android.hardware.security.keymint.IKeyMintDevice/default
-    interface aidl android.hardware.security.sharedsecret.ISharedSecret/default
     disabled
     seclabel u:r:recovery:s0
 
