@@ -55,14 +55,6 @@ on boot
     chmod 664 /sys/class/typec/port0/power_role
     chmod 664 /sys/class/typec/port0/data_role
     chmod 664 /sys/class/typec/port0/port_type
-    start vendor.usb-hal-1-2
-
-service vendor.usb-hal-1-2 /vendor/bin/hw/android.hardware.usb@1.2-service-mediatekv2
-    class hal
-    user root
-    group root system shell mtp
-    capabilities
-    seclabel u:r:recovery:s0
 
 on property:init.svc.adbd=running
     setprop sys.usb.ffs.ready 1
