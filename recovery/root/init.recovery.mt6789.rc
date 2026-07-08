@@ -35,6 +35,7 @@ service keystore2 /system/bin/keystore2 /tmp/misc/keystore
     seclabel u:r:recovery:s0
 
 on fs
+    exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
     wait /dev/block/platform/soc/11270000.ufshci
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
     chmod 0777 /trustkernel.twrp.sh
