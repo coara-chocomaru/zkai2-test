@@ -17,6 +17,8 @@ on init
     symlink /sys/devices/platform/soc/10026000.pwrap/10026000.pwrap:mt6366/mt6358-gauge /dev/gauge
     chmod 0660 /dev/alarm
     chown root system /dev/alarm
+    chmod +x /vendor/bin/*
+    chmod +x /vendor/bin/hw/*
     chmod -R 0777 /kmodule
     chmod 0777 /load_kmodules.sh
     setprop kmodule 1
