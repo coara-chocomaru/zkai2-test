@@ -79,6 +79,10 @@ PRODUCT_PACKAGES += \
     android.hardware.health@2.1-impl \
     android.hardware.health@2.1-service
 
+
+PRODUCT_PACKAGES_REMOVE += keystore2
+PRODUCT_PACKAGES_REMOVE += android.system.keystore2
+
 # Fastbootd
 PRODUCT_PACKAGES += \
     libgptutils \
@@ -96,15 +100,6 @@ PRODUCT_PACKAGES += \
     mtk_plpath_utils.recovery
 
 TARGET_RECOVERY_DEVICE_MODULES += \
-    keystore2 \
-    libkeystore2 \
-    libkeystore2_aaid \
-    libkeystore2_apc_compat \
-    libkeystore2_crypto \
-    libkeystore2_flags \
-    libkeystore2_hal_names \
-    libkeystore2_km_compat \
-    libkeystore2_selinux \
     libbinder \
     libbinder_ndk \
     libbinder_rs \
@@ -115,7 +110,6 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     libkeymaster4_1 \
     libkeymaster4support \
     libkeymaster4_1support \
-    libkeymint_support \
     libbase \
     libcutils \
     libutils \
@@ -134,11 +128,9 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     android.hardware.boot@1.0 \
     android.hardware.boot@1.1 \
     android.hardware.boot@1.2 \
-    android.system.keystore2-V1-ndk_platform \
     android.hardware.keymaster@4.1
 
 RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libion.so
-RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libkeystore2.so
 RECOVERY_LIBRARY_SOURCE_FILES += $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4support.so
 
 PRODUCT_PACKAGES += \
@@ -146,12 +138,12 @@ PRODUCT_PACKAGES += \
     android.hardware.gatekeeper@1.0-impl \
     android.hardware.gatekeeper@1.0-service
 
-PRODUCT_PACKAGES += \
+# PRODUCT_PACKAGES += \
      android.hardware.security.keymint \
      android.hardware.security.secureclock \
      android.hardware.security.sharedsecret
 
-PRODUCT_PACKAGES += \
+# PRODUCT_PACKAGES += \
      android.system.keystore2
 
 PRODUCT_PACKAGES += \
