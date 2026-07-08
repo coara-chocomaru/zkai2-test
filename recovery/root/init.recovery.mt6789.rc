@@ -31,6 +31,7 @@ on fs && property:ro.debuggable=0
 on fs
     wait /dev/block/platform/soc/11270000.ufshci
     symlink /dev/block/platform/soc/11270000.ufshci /dev/block/bootdevice
+    start vendor.boot-hal-1-2 
 
 on boot
     exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
@@ -42,7 +43,6 @@ on boot
 
 on post-fs-data
     start vendor.health-hal-2-1
-    start vendor.boot-hal-1-2 
 
 on property:persist.vendor.mtk.pl_lnk=1
     symlink /dev/block/mapper/pl_a /dev/block/by-name/preloader_raw_a
