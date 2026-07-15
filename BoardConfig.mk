@@ -138,9 +138,12 @@ BOARD_ROOT_EXTRA_SYMLINKS := \
 
 # AVB
 BOARD_AVB_ENABLE := true
-BOARD_AVB_RECOVERY_ADD_HASH_FOOTER_ARGS += \
-    --prop com.android.build.boot.os_version:$(PLATFORM_VERSION) \
-    --prop com.android.build.boot.security_patch:$(PLATFORM_SECURITY_PATCH)
+BOARD_AVB_VENDOR_BOOT_ADD_HASH_FOOTER_ARGS += \
+    --algorithm NONE \
+    --hash_algorithm sha256 \
+    --salt 5595fc94317e8bfbcb8842469aa5b05b2e4796c87a5a0c9ce624494b6ab7e4f0 \
+    --prop "com.android.build.vendor_boot.fingerprint:ZMOOTH/Zkai-study-Tab/Zkai-study-Tab:12/SP1A.210812.016/1722332548:user/dev-keys"
+
 
 #security
 PLATFORM_SECURITY_PATCH := 2025-11-05
