@@ -142,7 +142,7 @@ BOARD_AVB_VENDOR_BOOT_ADD_HASH_FOOTER_ARGS += \
     --algorithm NONE \
     --hash_algorithm sha256 \
     --salt 5595fc94317e8bfbcb8842469aa5b05b2e4796c87a5a0c9ce624494b6ab7e4f0 \
-    --prop "com.android.build.vendor_boot.fingerprint:ZMOOTH/Zkai-study-Tab/Zkai-study-Tab:12/SP1A.210812.016/1722332548:user/dev-keys"
+    --prop com.android.build.vendor_boot.fingerprint:ZMOOTH/Zkai-study-Tab/Zkai-study-Tab:12/SP1A.210812.016/1722332548:user/dev-keys
 
 
 #security
